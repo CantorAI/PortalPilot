@@ -1,10 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script>
+        var actMap = '{}';
+        mgr = new GraphManager(idGraphDrawPad, actMap);
+    </script>
 </head>
 <body style="background-color:red">
-    <h1>
-        Node Graph
-    </h1>
+    <div style="flex: 1 1 auto; padding-left: 5px; display: flex; flex-wrap: nowrap;
+       margin-bottom: 3px;
+       border: solid 0.0em gold;
+       border-bottom-color: blue; border-bottom-width: 2px;">
+        <a class="MenuItem" onclick="mgr.newNode();">New Node</a>
+        <a class="MenuItem" onclick="mgr.newNode();">Load</a>
+        <a class="MenuItem" onclick="mgr.newNode();">Apply</a>
+        <a class="MenuItem" onclick="mgr.deleteCurObj();">Delete</a>
+    </div>
+    <div>
+        <canvas id="idGraphDrawPad" style="width:100%;height:100%;"
+                oncontextmenu="return false;">
+        </canvas>
+    </div>
 </body>
 </html>
