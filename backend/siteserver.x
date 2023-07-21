@@ -2,6 +2,9 @@ from xlang_http import http
 from xlang_os import fs
 from xlang_os import utils
 import xlangkernel
+import cantor thru 'lrpc:1000'
+taskManager = cantor.TaskManager()
+metrics = cantor.Metrics()
 
 args = get_args()
 if args.size()>0:
@@ -13,6 +16,14 @@ root = "../frontend"
 print("root=${root},pid=",pid())
 
 # kmgt = xlangkernel.KernelManager()
+
+@srv.route("/api/metrics")
+def queryMetrics():
+	params = req.params
+	objectKey = params["object"]
+	keys = params["keys"]
+	m = metrics.queryMetrics(objectKey,keys)
+	return [str(m,format=True), "text/json"]
 
 @srv.route("/api/newSession")
 def newSession():
