@@ -143,17 +143,19 @@ class CantorRequest
     _url = null;
     _cachedObj = null;
     _cb = null;//callback
+    _context = null;
 
-    constructor(url,cb)
+    constructor(url,cb,context)
     {
         this._cb = cb;
+        this._context = context;
         let self = this;
         function reqListener () 
         {
             self._cachedObj._content = this.responseText;
             if(self._cb)
             {
-                self._cb(self._cachedObj._content);
+                self._cb(self._context,self._cachedObj._content);
             }
         }
         function reqTimeout(e)
@@ -170,7 +172,7 @@ class CantorRequest
         if( this._cachedObj == null)
         {
             this._cachedObj = new CantorCache();
-            dict[url] = this._cachedObj;
+            //dict[url] = this._cachedObj;
             var oReq = new XMLHttpRequest();
             oReq.addEventListener("load", reqListener);
             oReq.addEventListener("timeout ", reqTimeout);
@@ -179,7 +181,7 @@ class CantorRequest
         }
         else if(cb)
         {
-            cb(this._cachedObj._content);
+            cb(this._context,this._cachedObj._content);
         }
     }
 }
