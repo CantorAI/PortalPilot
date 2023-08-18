@@ -145,10 +145,11 @@ class CantorRequest
     _cb = null;//callback
     _context = null;
 
-    constructor(url,cb,context)
+    constructor(url,cb,context=null,use_cache =true)
     {
         this._cb = cb;
         this._context = context;
+        this._cachedObj = null;
         let self = this;
         function reqListener () 
         {
@@ -162,17 +163,23 @@ class CantorRequest
         {
 
         }
-        var dict = window["CantorRequest_cache"];
-        if( dict == null)
+        var dict = null;
+        if (use_cache)
         {
-            dict ={};
-            window["CantorRequest_cache"] =dict;
+            dict = window["CantorRequest_cache"];
+            if (dict == null) {
+                dict = {};
+                window["CantorRequest_cache"] = dict;
+            }
+            this._cachedObj = dict[url];
         }
-        this._cachedObj = dict[url];
         if( this._cachedObj == null)
         {
             this._cachedObj = new CantorCache();
-            dict[url] = this._cachedObj;
+            if (use_cache)
+            {
+                dict[url] = this._cachedObj;
+            }
             var oReq = new XMLHttpRequest();
             oReq.addEventListener("load", reqListener);
             oReq.addEventListener("timeout ", reqTimeout);

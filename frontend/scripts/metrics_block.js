@@ -66,7 +66,7 @@ function contentCallback(data_put,content) {
 function fetchData(data_put, metricName) {
     //http://localhost:9089/api/metrics?keys=CPU&object=
     let uri = "http://localhost:9089/api/metrics?keys=" + metricName +"&object=";
-    new CantorRequest(uri, contentCallback, data_put);
+    new CantorRequest(uri, contentCallback, data_put,false);
 }
 function fetchData_fake(minVal, maxVal) {
     return Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
