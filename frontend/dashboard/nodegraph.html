@@ -4,6 +4,69 @@
     <script>
         var actMap = '{}';
         mgr = new GraphManager(idGraphDrawPad, actMap);
+        function newDataset() {
+            let objType = "Dataset";
+            let desc = "";
+            let pinStr = '[\
+                {\
+                    "Name": "output",\
+                        "Dir": "out",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                }\
+             ]';
+            mgr.newObj(objType, desc, pinStr);
+        }
+        function newFermat() {
+            let objType = "Fermat";
+            let desc = "";
+            let pinStr = '[\
+                {\
+                    "Name": "input",\
+                        "Dir": "in",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                },\
+                {\
+                    "Name": "output",\
+                        "Dir": "out",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                }\
+             ]';
+            mgr.newObj(objType, desc, pinStr);
+        }
+        function newTee() {
+            let objType = "Tee";
+            let desc = "";
+            let pinStr = '[\
+                {\
+                    "Name": "input",\
+                        "Dir": "in",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                },\
+                {\
+                    "Name": "output1",\
+                        "Dir": "out",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                },\
+                {\
+                    "Name": "output2",\
+                        "Dir": "out",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                }\
+             ]';
+            mgr.newObj(objType, desc, pinStr);
+        }
     </script>
 </head>
 <body style="background-color:red">
@@ -12,8 +75,9 @@
        border: solid 0.0em gold;
        border-bottom-color: blue; border-bottom-width: 2px;">
         <a class="MenuItem" onclick="mgr.newNode();">New Node</a>
-        <a class="MenuItem" onclick="mgr.newNode();">Load</a>
-        <a class="MenuItem" onclick="mgr.newNode();">Apply</a>
+        <a class="MenuItem" onclick="newDataset();">New Dataset</a>
+        <a class="MenuItem" onclick="newFermat();">New Fermat</a>
+        <a class="MenuItem" onclick="newTee();">New Tee</a>
         <a class="MenuItem" onclick="mgr.deleteCurObj();">Delete</a>
     </div>
     <div>
