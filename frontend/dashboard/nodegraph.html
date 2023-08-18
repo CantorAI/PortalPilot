@@ -18,6 +18,20 @@
              ]';
             mgr.newObj(objType, desc, pinStr);
         }
+        function newSink() {
+            let objType = "Sink";
+            let desc = "";
+            let pinStr = '[\
+                {\
+                    "Name": "input",\
+                        "Dir": "in",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                }\
+             ]';
+            mgr.newObj(objType, desc, pinStr);
+        }
         function newFermat() {
             let objType = "Fermat";
             let desc = "";
@@ -67,6 +81,34 @@
              ]';
             mgr.newObj(objType, desc, pinStr);
         }
+        function newMux() {
+            let objType = "Mux";
+            let desc = "";
+            let pinStr = '[\
+                {\
+                    "Name": "input1",\
+                        "Dir": "in",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                },\
+                {\
+                    "Name": "input2",\
+                        "Dir": "in",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                },\
+                {\
+                    "Name": "output",\
+                        "Dir": "out",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                }\
+             ]';
+            mgr.newObj(objType, desc, pinStr);
+        }
     </script>
 </head>
 <body style="background-color:red">
@@ -78,6 +120,8 @@
         <a class="MenuItem" onclick="newDataset();">New Dataset</a>
         <a class="MenuItem" onclick="newFermat();">New Fermat</a>
         <a class="MenuItem" onclick="newTee();">New Tee</a>
+        <a class="MenuItem" onclick="newSink();">New Sink</a>
+        <a class="MenuItem" onclick="newMux();">New Mux</a>
         <a class="MenuItem" onclick="mgr.deleteCurObj();">Delete</a>
     </div>
     <div>
