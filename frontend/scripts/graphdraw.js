@@ -49,6 +49,16 @@ class GraphManager {
         this.oldViewportY = 0;
 
     }
+    reInit(canvas, actMap) {
+        var rect = canvas.parentNode.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+
+        this.site = canvas;
+        this.actMap = JSON.parse(actMap);
+
+        this.redraw();
+    }
     constructor(canvas, actMap) {
         var rect = canvas.parentNode.getBoundingClientRect();
         canvas.width = rect.width;
