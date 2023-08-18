@@ -172,7 +172,7 @@ class CantorRequest
         if( this._cachedObj == null)
         {
             this._cachedObj = new CantorCache();
-            //dict[url] = this._cachedObj;
+            dict[url] = this._cachedObj;
             var oReq = new XMLHttpRequest();
             oReq.addEventListener("load", reqListener);
             oReq.addEventListener("timeout ", reqTimeout);
@@ -204,7 +204,7 @@ class CantorPanelImpl extends HTMLElement
     {
         let self = this;
 
-        function contentCallback(content) 
+        function contentCallback(context,content) 
         {
             if(self.ContentInsideFullHtmlDoc)
             {

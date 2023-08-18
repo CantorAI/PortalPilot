@@ -28,8 +28,9 @@ def queryMetrics():
 @srv.route("/api/newSession")
 def newSession():
 	sessionId = utils.generate_uid()
+	print("newSession:",sessionId)
 	code = "print('new session')"
-	kmgt.runCode(sessionId,code)
+	# kmgt.runCode(sessionId,code)
 	idPack = {"sessionId":sessionId}
 	return [str(idPack,format=True), "text/json"]
 
@@ -40,7 +41,7 @@ def runCode():
 	sessionId = params["sessionId"]
 	code = params["code"]
 	code = code.slice(1,code.size()-1)
-	kmgt.runCode(sessionId,code)
+	# kmgt.runCode(sessionId,code)
 	return [{"ret":True}, "text/json"]
 
 @srv.route("/api/fetchOutputs")
@@ -48,7 +49,7 @@ def fetchOutputs():
 	print("inside fetchOutputs")
 	params = req.params
 	sessionId = params["sessionId"]
-	retVal = kmgt.fetchOutputs(sessionId)
+	# retVal = kmgt.fetchOutputs(sessionId)
 	print("fetchOutputs,ret",retVal)
 	return [{"ret":retVal}, "text/json"]
 
@@ -66,6 +67,7 @@ def retreiveContent(filePath,openMode):
 @srv.route("/")
 def ToIndexPage():
 	filePath =root+"/index.html"
+	print("ToIndexPage:",filePath)
 	content = retreiveContent(filePath,"r");
 	return [content, "text/html"]
 

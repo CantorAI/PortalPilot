@@ -7,7 +7,7 @@ class SiteApi {
     }
 
     call(api,cb) {
-        function contentCallback(content) {
+        function contentCallback(context,content) {
             let retObj = JSON.parse(content);
             cb(retObj);
         }

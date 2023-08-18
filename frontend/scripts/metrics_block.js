@@ -1,10 +1,22 @@
 const DATA_POINTS = 120; // 2 minutes of data at 1s interval
 const BUFFER_SIZE = 5 * DATA_POINTS;
 class Metrics {
-    constructor(updatePeriod, timeWindow) {
+    constructor(sources,updatePeriod, timeWindow) {
         this.updatePeriod = updatePeriod;
         this.timeWindow = timeWindow;
-        this.map = new Map();
+        const ds_key = "metrics_map:" + sources;
+        if (typeof _datastore !== "undefined") {
+            if (_datastore.has(ds_key)) {
+                this.map = _datastore.get(ds_key);
+            }
+            else {
+                this.map = new Map();
+                _datastore.set(ds_key, this.map);
+            }
+        }
+        else {
+            this.map = new Map();
+        }
         this.colors = new Map();
     }
     getRandomColor() {
@@ -30,8 +42,10 @@ class Metrics {
     Colors(name) {
         return this.colors.get(name);
     }
-    addMetric(name,color) {
-        this.map.set(name, []);
+    addMetric(name, color) {
+        if (!this.map.has(name)) {
+            this.map.set(name, []);
+        }
         if (color == undefined) {
             color = this.getRandomColor();
         }
@@ -64,6 +78,8 @@ class MetricsBlock extends HTMLElement {
     attributeChangedCallback(attrName, oldVal, newVal) {
         this[attrName] = newVal;
         if (attrName == "src") {
+            //use 1000 from seconds to to ms
+            this.metrics = new Metrics(newVal,1000, DATA_POINTS * 1000);
             this.parseMetrics(newVal);
         }
     }
@@ -97,12 +113,6 @@ class MetricsBlock extends HTMLElement {
         this.currentOffset = { x: 0, y: 0 };
         this.dragStart = null;
         this.svg = null;
-
-        this.metrics = new Metrics(1000, DATA_POINTS * 1000);//use 1000 from seconds to to ms
-        //this.metrics.addMetric("CPU");
-        //this.metrics.addMetric("Memory");
-        //this.metrics.addMetric("ThreadCount");
-        //this.metrics.addMetric("CantorCPU");
 
         this.addStyles(`
             svg {

@@ -12,7 +12,7 @@ class MarkdownBlocklImpl extends HTMLElement {
     loadFromContent() {
         let self = this;
 
-        function contentCallback(content) {
+        function contentCallback(context,content) {
             self.innerHTML = marked.parse(content);
         }
         let src_url = this.getAttribute('src');

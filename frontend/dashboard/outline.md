@@ -1,7 +1,7 @@
 
 [Node Map](javascript:go_to("/dashboard/nodemap.html")) 
 
-[Task Manager](javascript:go_to("/tutorials/helloworld.md"))  
+[Metrics](javascript:go_to("/test_metrics.html"))  
 
 [System](javascript:go_to("/tutorials/basics.md"))  
 
