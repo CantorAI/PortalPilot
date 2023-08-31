@@ -13,7 +13,8 @@ else:
 	port = 9088
 srv = http.Server()
 root = "../frontend"
-print("root=${root},pid=",pid())
+other_roots =["../../Galaxy/test","../../Cantor/src/WebEngine","../../Galaxy/Javascript"]
+print("root=${root} + ${other_roots},pid=",pid())
 
 # kmgt = xlangkernel.KernelManager()
 
@@ -91,6 +92,12 @@ def GetOthers(req,res):
 	filePath = root+path
 	# print("open file:${filePath}",mime)
 	content = retreiveContent(filePath,openMode)
+	if content == "":
+		for r in other_roots:
+			filePath = r+path
+			content = retreiveContent(filePath,openMode)
+			if content != "":
+				break
 	res.add_header("X-Frame-Options","AllowAll")
 	res.set_content(content, mime)
 
