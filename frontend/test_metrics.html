@@ -5,12 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Metric Visualization</title>
     <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script type="text/javascript" src="lib/dygraphs/dygraph.js"></script>
+    <script type="text/javascript" src="lib/dygraphs/extras/crosshair.js"></script>
+    <link rel="stylesheet" type="text/css" href="lib/dygraphs/dygraph.css" />
     <script src="scripts/cantorJs.js"></script>
     <script src="scripts/metrics_block.js"></script>
-
+    <script src="scripts/api.js"></script>
+    <link rel="stylesheet" href="./styles/syntax.css">
 </head>
 <body>
-    <metrics-block id="metrics1" src="CPU:red,Tee_FPS:blue"></metrics-block>
-    <metrics-block id="metrics2" src="ThreadCount,GPU"></metrics-block>
+    <metrics-block id="metrics1" src="CPU:red,Tee_FPS:blue" style="width:600px;height:400px;"></metrics-block>
+    <metrics-block id="metrics2" src="ThreadCount,GPU" style="width:600px;height:400px;"></metrics-block>
 </body>
 </html>
