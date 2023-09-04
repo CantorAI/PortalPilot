@@ -1,0 +1,81 @@
+{
+  "name": "qrcode-icu",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "hmr": "ng serve --hmr --host 127.0.0.1 --port 4208",
+    "build": "ng build",
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "ng e2e",
+    "generate-icons": "svg-generator"
+  },
+  "svgGenerator": {
+    "outputPath": "./src/app/svg",
+    "prefix": "app",
+    "srcPath": "./src/assets/svg",
+    "svgoConfig": {
+      "plugins": [
+        {
+          "removeDimensions": true,
+          "cleanupAttrs": true
+        }
+      ]
+    }
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^16.0.4",
+    "@angular/cdk": "^16.0.2",
+    "@angular/common": "^16.0.4",
+    "@angular/compiler": "^16.0.4",
+    "@angular/core": "^16.0.4",
+    "@angular/forms": "^16.0.4",
+    "@angular/platform-browser": "^16.0.4",
+    "@angular/platform-browser-dynamic": "^16.0.4",
+    "@angular/router": "^16.0.4",
+    "@angular/service-worker": "^16.0.4",
+    "@ant-design/icons-angular": "^15.0.0",
+    "@fingerprintjs/fingerprintjs": "^3.3.3",
+    "@ngneat/svg-icon": "^4.0.2",
+    "@scena/guides": "^0.17.0",
+    "@types/ua-parser-js": "^0.7.36",
+    "anim-event": "^1.0.17",
+    "file-saver": "^2.0.5",
+    "interactjs": "^1.10.11",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
+    "primeicons": "^6.0.1",
+    "primeng": "^16.2.0",
+    "rxjs": "^7.8.0",
+    "sortablejs": "^1.14.0",
+    "spark-md5": "2.0.2",
+    "tslib": "^2.0.0",
+    "typed.js": "^2.0.12",
+    "zone.js": "~0.13.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^16.0.4",
+    "@angular/cli": "^16.0.4",
+    "@angular/compiler-cli": "^16.0.4",
+    "@ngneat/svg-generator": "^7.0.1",
+    "@types/file-saver": "^2.0.3",
+    "@types/jasmine": "~3.6.0",
+    "@types/jasminewd2": "~2.0.3",
+    "@types/node": "^12.11.1",
+    "@types/sortablejs": "^1.10.6",
+    "codelyzer": "^0.0.28",
+    "jasmine-core": "~3.6.0",
+    "jasmine-spec-reporter": "~5.0.0",
+    "karma": "~6.3.2",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage-istanbul-reporter": "~3.0.2",
+    "karma-jasmine": "~4.0.0",
+    "karma-jasmine-html-reporter": "^1.5.0",
+    "protractor": "^3.3.0",
+    "ts-node": "~8.3.0",
+    "tslint": "~6.1.0",
+    "typescript": "^5.0.4"
+  }
+}

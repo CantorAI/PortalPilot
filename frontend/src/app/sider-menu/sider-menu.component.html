@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="logo">
+    <img src="assets/logo.jpg">
+  </div>
+  <div class="menu-item" routerLink="dashboard"
+       [ngClass]="{'actived':currentUrl.startsWith('/dashboard')}">
+    <i class="pi pi-chart-bar"></i>
+  </div>
+  <div class="menu-item" routerLink="designstudio"
+       [ngClass]="{'actived':currentUrl.startsWith('/designstudio')}">
+    <i class="pi pi-pencil"></i>
+  </div>
+
+  <!--  <div class="menu-item" routerLink="node-map/design"-->
+  <!--       [ngClass]="{'actived':currentUrl.startsWith('/node-map')}">-->
+  <!--    <i class="pi pi-list"></i>-->
+  <!--  </div>-->
+  <!--  <div class="menu-item" routerLink="metrics/overview"-->
+  <!--       [ngClass]="{'actived':currentUrl.startsWith('/metrics')}">-->
+  <!--    <i class="pi pi-chart-bar"></i>-->
+  <!--  </div>-->
+  <!--  <div class="menu-item">-->
+  <!--    <i class="pi pi-wrench"></i>-->
+  <!--  </div>-->
+</div>
