@@ -90,14 +90,16 @@ def GetOthers(req,res):
 		openMode ="rb"
 	params = req.params
 	filePath = root+path
-	# print("open file:${filePath}",mime)
 	content = retreiveContent(filePath,openMode)
 	if content == "":
 		for r in other_roots:
 			filePath = r+path
 			content = retreiveContent(filePath,openMode)
 			if content != "":
+				print("open file(try again):${filePath}",mime)
 				break
+	else:
+		print("open file:${filePath}",mime)
 	res.add_header("X-Frame-Options","AllowAll")
 	res.set_content(content, mime)
 
