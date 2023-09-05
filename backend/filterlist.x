@@ -61,7 +61,7 @@ def retrieveFilterList():
 	# for key, value in data.items():
 	#	print(f'{key}: {value}')
 	jsonData = convertYamltoJson(yamlData)
-	return yamlData
+	return jsonData
 
 def retrieveFilterListRaw():
 	filePath = 'C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\config\\filters.yaml'
@@ -88,6 +88,12 @@ def retrieveFilterPropertyList(filterObj):
 	propertyList = filterType.getMembers()
 	return propertyList
 
+def retrieveFilterPropertyListbyType(filterTypeStr, filterDll):
+	filterObj = galaxy.LoadFilter (filterTypeStr, filterDll)
+	filterType = type(filterObj)
+	propertyList = filterType.getMembers()
+	return propertyList
+
 # def retrieveFilterProperty(filterObj, propertyKey):
 #	propertyValue = filterObj.getMember(propertyKey)
 #	return propertyValue
@@ -96,10 +102,11 @@ def retrieveFilterPropertyList(filterObj):
 cantor.RegisterAPI('retrieveFilterList',retrieveFilterList)
 cantor.RegisterAPI('retrieveFilterListRaw',retrieveFilterListRaw)
 cantor.RegisterAPI('retrieveFilterPropertyList',retrieveFilterPropertyList)
+cantor.RegisterAPI('retrieveFilterPropertyListbyType',retrieveFilterPropertyListbyType)
 # cantor.RegisterAPI('retrieveFilterProperty',retrieveFilterProperty)
 
 # retrieveFilterListRaw()
-retrieveFilterList()
+# retrieveFilterList()
 
 '''
 dataset = galaxy.LoadFilter ('dataset', 'galaxy_dataset')
@@ -112,5 +119,8 @@ retrieveFilterPropertyList(fermat)
 retrieveFilterPropertyList(promptFilter)
 retrieveFilterPropertyList(llmAgentFilter)
 
+retrieveFilterPropertyListbyType('fermat','galaxy_fermat')
+
 '''
+
 cantor.log('End of filterlist.x')
