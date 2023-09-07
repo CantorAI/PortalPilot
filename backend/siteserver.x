@@ -2,8 +2,7 @@ from xlang_http import http
 from xlang_os import fs
 from xlang_os import utils
 import xlangkernel
-import filterlist
-#import designpage
+# import filterlist
 import cantor thru 'lrpc:1000'
 taskManager = cantor.TaskManager()
 metrics = cantor.Metrics()
