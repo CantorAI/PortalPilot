@@ -4,7 +4,11 @@ import yaml
 from xlang_os import fs
 
 galaxy.cantor = cantor
-cantor.log('start of filterlist.x')
+# cantor.log('start of filterlist.x')
+moduleFileName = get_module_filename()
+filename_parts = []
+filename_parts = moduleFileName.split("portalpilot")
+cantorAIRoot = filename_parts[0]
 
 myTab = '  '
 def convertYamltoJson(yamlData):
@@ -51,36 +55,51 @@ def convertYamltoJson(yamlData):
 	jsonOut += '\n  ]'
 	jsonOut += '\n}'
 
-	print(jsonOut)
+	# print(jsonOut)
 	return jsonOut
 
 def retrieveFilterList():
-	yamlData = yaml.load('C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\config\\filters.yaml') 
-	print('got yaml data')
-	print (yamlData.size)
+	# yamlData = yaml.load('C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\config\\filters.yaml') 
+	# yamlData = yaml.load('..\\..\\CantorAI\\Galaxy\\config\\filters.yaml') 
+	yamlFilePath = cantorAIRoot + "Galaxy/config/filters.yaml"
+	yamlData = yaml.load (yamlFilePath)
+
 	# for key, value in data.items():
 	#	print(f'{key}: {value}')
 	jsonData = convertYamltoJson(yamlData)
 	return jsonData
 
 def retrieveFilterListRaw():
-	filePath = 'C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\config\\filters.yaml'
+	# filePath = 'C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\config\\filters.yaml'
+	yamlFilePath = cantorAIRoot + "Galaxy/config/filters.yaml"
 	openMode = 'r'
-	f = fs.File(filePath,openMode)
+	f = fs.File(yamlFilePath,openMode)
 	f_size = f.size
 	if f_size >=0:
 		data = f.read(f_size)
 	else:
 		data = ''
 	f.close()
-	cantor.log(data)
+	# cantor.log(data)
 	return data
 
-def retrieveFilterDesignPage(fileterName, fileterURI):
-	filter = galaxy.LoadFilter (fileterName, fileterURI)
-	if (filter == 0):
-		return 0
-	designPage = filter.getFiilterDesignPage()
+# def retrieveFilterDesignPage(fileterName, fileterURI):
+def retrieveFilterDesignPage():
+	# filter = galaxy.LoadFilter (fileterName, fileterURI)
+	# if (filter == 0):
+	# 	return 0
+	# designPage = filter.getFilterDesignPage()
+
+	filePath = 'C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\dataset\\DesignPage.htm'
+	openMode = 'r'
+	f = fs.File(filePath,openMode)
+	f_size = f.size
+	if f_size >=0:
+		designPage = f.read(f_size)
+	else:
+		data = ''
+	f.close()
+	# cantor.log(designPage)
 	return designPage
 
 def retrieveFilterPropertyList(filterObj):
@@ -104,9 +123,11 @@ cantor.RegisterAPI('retrieveFilterListRaw',retrieveFilterListRaw)
 cantor.RegisterAPI('retrieveFilterPropertyList',retrieveFilterPropertyList)
 cantor.RegisterAPI('retrieveFilterPropertyListbyType',retrieveFilterPropertyListbyType)
 # cantor.RegisterAPI('retrieveFilterProperty',retrieveFilterProperty)
+cantor.RegisterAPI('retrieveFilterDesignPage',retrieveFilterDesignPage)
 
-# retrieveFilterListRaw()
+retrieveFilterListRaw()
 # retrieveFilterList()
+# retrieveFilterDesignPage()
 
 '''
 dataset = galaxy.LoadFilter ('dataset', 'galaxy_dataset')
@@ -123,4 +144,5 @@ retrieveFilterPropertyListbyType('fermat','galaxy_fermat')
 
 '''
 
-cantor.log('End of filterlist.x')
+# cantor.log('End of filterlist.x')
+cantor.log('filterlist is loaded ')
