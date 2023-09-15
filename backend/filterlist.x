@@ -107,12 +107,6 @@ def retrieveFilterPropertyList(filterObj):
 	propertyList = filterType.getMembers()
 	return propertyList
 
-def retrieveFilterPropertyListbyType(filterTypeStr, filterDll):
-	filterObj = galaxy.LoadFilter (filterTypeStr, filterDll)
-	filterType = type(filterObj)
-	propertyList = filterType.getMembers()
-	return propertyList
-
 # def retrieveFilterProperty(filterObj, propertyKey):
 #	propertyValue = filterObj.getMember(propertyKey)
 #	return propertyValue
@@ -121,7 +115,6 @@ def retrieveFilterPropertyListbyType(filterTypeStr, filterDll):
 cantor.RegisterAPI('retrieveFilterList',retrieveFilterList)
 cantor.RegisterAPI('retrieveFilterListRaw',retrieveFilterListRaw)
 cantor.RegisterAPI('retrieveFilterPropertyList',retrieveFilterPropertyList)
-cantor.RegisterAPI('retrieveFilterPropertyListbyType',retrieveFilterPropertyListbyType)
 # cantor.RegisterAPI('retrieveFilterProperty',retrieveFilterProperty)
 cantor.RegisterAPI('retrieveFilterDesignPage',retrieveFilterDesignPage)
 
@@ -139,8 +132,6 @@ retrieveFilterPropertyList(dataset)
 retrieveFilterPropertyList(fermat)
 retrieveFilterPropertyList(promptFilter)
 retrieveFilterPropertyList(llmAgentFilter)
-
-retrieveFilterPropertyListbyType('fermat','galaxy_fermat')
 
 '''
 

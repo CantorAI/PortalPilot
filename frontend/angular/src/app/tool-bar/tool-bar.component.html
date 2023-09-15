@@ -1,0 +1,12 @@
+<div class="container">
+  <div class="logo">
+    <img src="assets/logo.jpg">
+  </div>
+  <div class="menus">
+    <p-menubar [model]="items" styleClass="tool-bar"></p-menubar>
+    <p-menu #menu [model]="userMenus" [popup]="true"></p-menu>
+    <button class="username" type="button" (click)="menu.toggle($event)">
+      User:5656**@microsoft.com
+    </button>
+  </div>
+</div>

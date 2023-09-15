@@ -1,0 +1,28 @@
+.container {
+  display: flex;
+
+  .logo {
+    border-bottom: 1px solid #eeeeee;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .menus {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 12px;
+
+    .username {
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+  }
+
+  .tool-bar {
+    width: 100%;
+  }
+}

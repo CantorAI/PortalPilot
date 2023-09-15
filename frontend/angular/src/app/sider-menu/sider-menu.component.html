@@ -1,0 +1,10 @@
+<div class="container">
+  <div class="menu-item" routerLink="dashboard"
+       [ngClass]="{'actived':currentUrl.startsWith('/dashboard')}">
+    <i class="pi pi-chart-bar"></i>
+  </div>
+  <div class="menu-item" routerLink="designstudio"
+       [ngClass]="{'actived':currentUrl.startsWith('/designstudio')}">
+    <i class="pi pi-pencil"></i>
+  </div>
+</div>

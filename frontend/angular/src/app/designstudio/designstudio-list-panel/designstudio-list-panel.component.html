@@ -1,0 +1,12 @@
+<div class="container">
+  <div class="button" (click)="onCreateClick()">new...</div>
+  <p-dialog header="Please input name" [(visible)]="createInputVisible"
+            [style]="{width: '50vw'}">
+    <ng-template pTemplate="content">
+      <input type="text" pInputText [(ngModel)]="createName"/>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <p-button (click)="onCreateOkClick()" label="Submit"></p-button>
+    </ng-template>
+  </p-dialog>
+</div>
