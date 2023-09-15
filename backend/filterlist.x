@@ -61,7 +61,7 @@ def retrieveFilterList():
 	# for key, value in data.items():
 	#	print(f'{key}: {value}')
 	jsonData = convertYamltoJson(yamlData)
-	return yamlData
+	return jsonData
 
 def retrieveFilterListRaw():
 	filePath = 'C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\config\\filters.yaml'
