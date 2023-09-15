@@ -1,0 +1,31 @@
+.container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  $toolbar-height: 48px;
+
+  .tb {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+
+    .tool-bar {
+      width: 100%;
+      height: $toolbar-height;
+      border-bottom: 1px solid #eeeeee;
+    }
+
+    .lr {
+      display: flex;
+      height: calc(100vh - #{$toolbar-height});
+
+      .side-menu {
+        flex-shrink: 0;
+        width: 52px;
+        height: 100%;
+        border-right: 1px solid #eeeeee;
+      }
+    }
+  }
+}

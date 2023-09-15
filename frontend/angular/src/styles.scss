@@ -1,0 +1,17 @@
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+
+/* You can add global styles to this file, and also import other style files */
+body {
+  padding: 0;
+  margin: 0;
+}
+
+.tool-bar {
+  &.p-menubar {
+    height: 48px;
+    border: none;
+    background: none;
+  }
+}
