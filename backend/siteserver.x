@@ -2,6 +2,7 @@ from xlang_http import http
 from xlang_os import fs
 from xlang_os import utils
 import xlangkernel
+# import filterlist
 import cantor thru 'lrpc:1000'
 taskManager = cantor.TaskManager()
 metrics = cantor.Metrics()
@@ -61,7 +62,7 @@ def retreiveContent(filePath,openMode):
     data = f.read(f_size)
   else:
     data = ""
-  f.close()
+  f.close() 
   return data
 
 # match root case for example, https://sitename
@@ -90,14 +91,16 @@ def GetOthers(req,res):
 		openMode ="rb"
 	params = req.params
 	filePath = root+path
-	# print("open file:${filePath}",mime)
 	content = retreiveContent(filePath,openMode)
 	if content == "":
 		for r in other_roots:
 			filePath = r+path
 			content = retreiveContent(filePath,openMode)
 			if content != "":
+				print("open file(try again):${filePath}",mime)
 				break
+	else:
+		print("open file:${filePath}",mime)
 	res.add_header("X-Frame-Options","AllowAll")
 	res.set_content(content, mime)
 
