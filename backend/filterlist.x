@@ -84,13 +84,16 @@ def retrieveFilterListRaw():
 	return data
 
 # def retrieveFilterDesignPage(fileterName, fileterURI):
-def retrieveFilterDesignPage():
+def retrieveFilterDesignPage(fileterName):
 	# filter = galaxy.LoadFilter (fileterName, fileterURI)
 	# if (filter == 0):
 	# 	return 0
 	# designPage = filter.getFilterDesignPage()
 
-	filePath = 'C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\dataset\\DesignPage.htm'
+	yamlFilePath = cantorAIRoot + "Galaxy" + filterName
+	openMode = 'r'
+
+	# filePath = 'C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\dataset\\DesignPage.htm'
 	openMode = 'r'
 	f = fs.File(filePath,openMode)
 	f_size = f.size
@@ -107,20 +110,22 @@ def retrieveFilterPropertyList(filterObj):
 	propertyList = filterType.getMembers()
 	return propertyList
 
-# def retrieveFilterProperty(filterObj, propertyKey):
-#	propertyValue = filterObj.getMember(propertyKey)
-#	return propertyValue
-	
+def retrieveFilterPropertyListbyType(filterTypeStr, filterDll):
+	filterObj = galaxy.LoadFilter (filterTypeStr, filterDll)
+	filterType = type(filterObj)
+	propertyList = filterType.getMembers()
+	return propertyList
 
 cantor.RegisterAPI('retrieveFilterList',retrieveFilterList)
 cantor.RegisterAPI('retrieveFilterListRaw',retrieveFilterListRaw)
 cantor.RegisterAPI('retrieveFilterPropertyList',retrieveFilterPropertyList)
+cantor.RegisterAPI('retrieveFilterPropertyListbyType',retrieveFilterPropertyListbyType)
 # cantor.RegisterAPI('retrieveFilterProperty',retrieveFilterProperty)
 cantor.RegisterAPI('retrieveFilterDesignPage',retrieveFilterDesignPage)
 
-retrieveFilterListRaw()
-# retrieveFilterList()
-# retrieveFilterDesignPage()
+#retrieveFilterListRaw()
+retrieveFilterList()
+# retrieveFilterDesignPage("dataset/DesignPage.html")
 
 '''
 dataset = galaxy.LoadFilter ('dataset', 'galaxy_dataset')
