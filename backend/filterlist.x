@@ -1,7 +1,7 @@
 import cantor thru 'lrpc:1000'
 from Galaxy import galaxy
 import yaml
-from xlang_os import fs
+# from xlang_os import fs
 
 galaxy.cantor = cantor
 # cantor.log('start of filterlist.x')
@@ -11,9 +11,9 @@ filename_parts = moduleFileName.split("portalpilot")
 cantorAIRoot = filename_parts[0]
 
 myTab = '  '
+category = ""
 def convertYamltoJson(yamlData):
 	# jsonOutput = {}
-
 	jsonOut = '{ \n'
 	bFirstCategory= True
 	# Loop through the top level categories
@@ -21,6 +21,7 @@ def convertYamltoJson(yamlData):
 		if(bFirstCategory == False):
 			jsonOut += '\n  ],\n'
 		category = child.key
+		# category = child
 		jsonOut += '  "'	
 		jsonOut += category
 		jsonOut += ' ":'
@@ -55,7 +56,7 @@ def convertYamltoJson(yamlData):
 	jsonOut += '\n  ]'
 	jsonOut += '\n}'
 
-	# print(jsonOut)
+	print(jsonOut)
 	return jsonOut
 
 def retrieveFilterList():
@@ -108,6 +109,7 @@ def retrieveFilterDesignPage(fileterName):
 def retrieveFilterPropertyList(filterObj):
 	filterType = type(filterObj)
 	propertyList = filterType.getMembers()
+	cantor.log(propertyList)
 	return propertyList
 
 def retrieveFilterPropertyListbyType(filterTypeStr, filterDll):
@@ -123,22 +125,22 @@ cantor.RegisterAPI('retrieveFilterPropertyListbyType',retrieveFilterPropertyList
 # cantor.RegisterAPI('retrieveFilterProperty',retrieveFilterProperty)
 cantor.RegisterAPI('retrieveFilterDesignPage',retrieveFilterDesignPage)
 
-#retrieveFilterListRaw()
+# retrieveFilterListRaw()
 retrieveFilterList()
 # retrieveFilterDesignPage("dataset/DesignPage.html")
 
-'''
+
 dataset = galaxy.LoadFilter ('dataset', 'galaxy_dataset')
 fermat = galaxy.LoadFilter('fermat','galaxy_fermat')
 promptFilter = galaxy.LoadFilter('prompt','galaxy_llmAgent')
 llmAgentFilter = galaxy.LoadFilter('llmAgent','galaxy_llmAgent')
 
-retrieveFilterPropertyList(dataset)
-retrieveFilterPropertyList(fermat)
-retrieveFilterPropertyList(promptFilter)
-retrieveFilterPropertyList(llmAgentFilter)
+# retrieveFilterPropertyList(dataset)
+# retrieveFilterPropertyList(fermat)
+# retrieveFilterPropertyList(promptFilter)
+# retrieveFilterPropertyList(llmAgentFilter)
 
-'''
+
 
 # cantor.log('End of filterlist.x')
 cantor.log('filterlist is loaded ')

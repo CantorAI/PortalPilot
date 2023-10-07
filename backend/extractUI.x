@@ -4,7 +4,7 @@
 # import cantor thru 'lrpc:1000'
 # from Galaxy import galaxy
 import ast
-# from xlang_os import fs
+from xlang_os import fs
 # galaxy.cantor = cantor
 
 print("start of extractUI")
@@ -15,8 +15,9 @@ filename_parts = moduleFileName.split("portalpilot")
 cantorAIRoot = filename_parts[0]
 xFilePath = cantorAIRoot + "Galaxy/test/test.new.x"
 
-filterList = []
-outputJson = {}
+gFilterList = []
+gFilterDetails = []
+gOutputJson = {}
 
 def getFilterName():
     filterName = ""
@@ -43,50 +44,86 @@ def getFilterCoordinates():
     y = 0
     return [x,y]
 
-def searchAST_old(node, filterList):
-    if isinstance(node, ast.Str):
-        if node.s in filterList:
-            print("Found keyword:", node.s, "on line", node.lineno)
-    
-    for field in node.children:
-        value = getattr(node, field)
-        if isinstance(value, list):
-            for item in value:
-                search_ast(item, filterList)
-        elif isinstance(value, ast.AST):
-            search_ast(value, filterList)
+def searchFiltersEdit(xFilePath):
+	openMode = 'r'
+	f = fs.File(xFilePath,openMode)
+	f_size = f.size
+	if f_size >=0:
+		data = f.read(f_size)
+	else:
+		data = ''
+	f.close()
+	# cantor.log(data)
 
-def searchFilters(node):
+    offset = data.find ("galaxy.LoadFilter")
+
+	return data
+
+def searchFilters(node, gFilterList, gFilterDetails):
+    global gFilterList     
+    global gFilterDetails
     if node.type == "Dot":
         # if node.children[0].name == "galaxy" and node.children[0].type == "var" and
         #    node.children[1].name == "LoadFilter" and node.children[1].type == "var" 
         #    print("save keyword:", node.parent.parent.name)
         child0 = node.children[0]
         child1 = node.children[1]
-             
         if (child0.name == "galaxy" and child1.name == "LoadFilter"):
            parent = node.parent
            grandparent = parent.parent
-           print("save keyword:", grandparent.name)
-           # filterList.push_back (grandparent.name)
-           # filterList.Add (grandparent.name)
-           # filterList.AddItem (grandparent.name)
-           # filterList += grandparent.name
+           sibling = parent.children[1]
+           nephew0 = sibling.children[0]
+           nephew1 = sibling.children[1]       
            filterFeatures = []
            filterFeature = {"filterName":grandparent.name}
            filterFeatures += filterFeature
            filterFeature = {"memberName":"filterType"}
            filterFeatures += filterFeature
-           filterFeature = {"parameters":${grandparent.name}}
+           filterFeature = {"parameters":nephew0.name}
            filterFeatures += filterFeature
-           filterList += filterFeatures
+           filterFeature = {"memberName":"filterDll"}
+           filterFeatures += filterFeature
+           filterFeature = {"parameters":nephew1.name}
+           filterFeatures += filterFeature
+           gFilterList += grandparent.name
+           gFilterDetails += filterFeatures
+           
+    # if (node.children != nullptr):
+    if (node.children.size() > 0):
+        for child in node.children:
+            searchFilters(child, gFilterList, gFilterDetails)
+    # print (gFilterList)
+
+def searchAdditionalFilterMembers (node, gFilterList, gFilterDetails):
+    global gFilterList     
+    global gFilterDetails
+    if node.type == "Dot": 
+        child0 = node.children[0]
+        child1 = node.children[1]
+        parent = node.parent
+        grandparent = parent.parent
+        sibling = parent.children[1]
+        nephew0 = sibling.children[0]
+        nephew1 = sibling.children[1]
+        for filterName in gFilterList:     
+           print (filterName)
+           if (child0.name == filterName):  
+                gOutputJson += child0.name
+                print("save keyword:", grandparent.name)
+                filterFeatures = []
+                filterFeature = {"filterName":child0.name}
+                filterFeatures += filterFeature
+                filterFeature = {"memberName":child1.name}
+                filterFeatures += filterFeature
+                filterFeature = {"parameters":${grandparent.name}}
+                filterFeatures += filterFeature
+                gOutputJson += filterFeatures
+                break;
     
     # if (node.children != nullptr):
     if (node.children.size() > 0):
         for child in node.children:
-            searchFilters(child, filterList)
-    #else:
-    #    print (filterList)
+            searchAdditionalFilterMembers(child, gFilterList, gFilterDetails)
 
 def searchConnections(node):
     if node.type == "Dot":
@@ -96,23 +133,27 @@ def searchConnections(node):
            parent = node.parent
            grandparent = parent.parent
            print("save keyword:", grandparent.name)
-           filterList += grandparent.name
+           gFilterList += grandparent.name
     
     # if (node.children != nullptr):
     if (node.children.size() > 0):
         for child in node.children:
-            searchFilters(child, filterList)
+            searchFilters(child, gFilterList)
 
 tree = ast.load(xFilePath)
-searchFilters(tree)
+searchFilters(tree, gFilterList, gFilterDetails)
+searchAdditionalFilterMembers(tree, gFilterList, gFilterDetails)
 # searchConnections(tree)
+
+# searchFiltersEdit(xFilePath)
+
 
 def extractUIfromX(projectFileName):
 	tree = ast.load(projectFileName)
     print ("AST has been created #1.")
     if (tree.children.size() > 0):
         # outPut = searchFilters(tree)
-        # searchConnections(tree, filterList)
+        # searchConnections(tree, gFilterList)
         print ("AST has been created #2.")
 	# return outPut
 
