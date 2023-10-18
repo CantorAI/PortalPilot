@@ -71,6 +71,7 @@ def searchFilters(node, gFilterList, gFilterDetails):
         if (child0.name == "galaxy" and child1.name == "LoadFilter"):
            parent = node.parent
            grandparent = parent.parent
+           
            sibling = parent.children[1]
            nephew0 = sibling.children[0]
            nephew1 = sibling.children[1]       
@@ -100,23 +101,37 @@ def searchAdditionalFilterMembers (node, gFilterList, gFilterDetails):
     if node.type == "Dot": 
         child0 = node.children[0]
         child1 = node.children[1]
-        parent = node.parent
-        grandparent = parent.parent
-        sibling = parent.children[1]
-        nephew0 = sibling.children[0]
-        nephew1 = sibling.children[1]
         for filterName in gFilterList:     
-           print (filterName)
            if (child0.name == filterName):  
-                gOutputJson += child0.name
-                print("save keyword:", grandparent.name)
+                print (filterName)
+                #gOutputJson += child0.name
+
+                parent = node.parent 
+                grandparent = parent.parent
+                sibling = parent.children[1]
+                if (parent.type == 'Assign')
+                    nephew1 = sibling
+                else if (parent.type == 'Pair'): 
+                    if (sibling and sibling.children):
+                        # num_nephew = len(sibling.children)
+                        num_nephew = sibling.children.size()
+                        if (num_nephew and num_nephew > 0):
+                            nephew0 = sibling.children[0]
+                        if (num_nephew and num_nephew > 1):
+                            nephew1 = sibling.children[1]
+
+                # print("save keyword:", grandparent.name)
                 filterFeatures = []
                 filterFeature = {"filterName":child0.name}
                 filterFeatures += filterFeature
                 filterFeature = {"memberName":child1.name}
                 filterFeatures += filterFeature
-                filterFeature = {"parameters":${grandparent.name}}
+                if (nephew1):
+                    filterFeature = {"parameters":nephew1}
+                else:
+                    filterFeature = {"parameters":"[]"}
                 filterFeatures += filterFeature
+                print ("filterFeatures:", filterFeatures)
                 gOutputJson += filterFeatures
                 break;
     
@@ -142,7 +157,12 @@ def searchConnections(node):
 
 tree = ast.load(xFilePath)
 searchFilters(tree, gFilterList, gFilterDetails)
+print ("=================== File List ==================")
+print (gFilterList)
+print ("=================== File Details ==================")
+print (gFilterDetails)
 searchAdditionalFilterMembers(tree, gFilterList, gFilterDetails)
+print ("=================== File Details #2 ==================")
 # searchConnections(tree)
 
 # searchFiltersEdit(xFilePath)
