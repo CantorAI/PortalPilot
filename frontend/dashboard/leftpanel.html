@@ -45,7 +45,10 @@
                         let filterName = Object.keys(data[cat][i])[0];
                         // let filterDll = Object.keys(data[cat][i])[1];
                         output += "<p>";
+                        //output += "<button onclick='create_new_model()>'" 
+                        output += "<button onclick='create_new_model()'>" 
                         output += filterName;
+                        output += "</button>";
                         output += "</p>";
                         // filterList.push({filterName, filterDll})
                         filterList.push(filterName)
@@ -57,9 +60,9 @@
 			}
         }
 
-        //function create_new_model() {
-        //  alert("Creating new model"); 
-        //}
+        function create_new_model() {
+          alert("Creating new model"); 
+        }
         //function save_model() {
         //  alert("save current model"); 
         //}
