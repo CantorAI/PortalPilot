@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Design Studio</title>    
+    <!--
+    <script>
+      function onload_msg() {
+        //window.alert("FetchfilterList called!"); 
+        alert("FetchfilterList called!"); 
+        //document.getElementById("output").innerHTML = "FetchfilterList called"; 
+      }
+    </script>
+    -->
+    <style>
+        #left-panel {
+          float: left; 
+          width: 10%;
+          height: 800px; 
+          border: 1px solid;
+        }
+        #main-panel {
+          float: left; 
+          width: 90%;
+          height: 800px; 
+          border: 1px solid;
+        }
+        #right-panel {
+          float: left; 
+          height: 800px; 
+          border: 1px solid;
+        }
+    </style>
+    <script type="module" src="scripts/md_block.js"></script>    
+    <script>
+    // Load left panel content 
+    fetch('/dashboard/leftpanel.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('left-panel').innerHTML = data;
+    });   
+    // Load right panel content
+    fetch('/dashboard/mainpanel.html')
+    //fetch('/dashboard/dashboar_toolbar.html')
+      .then(response => response.text()) 
+      .then(data => {
+        document.getElementById('main-panel').innerHTML = data;
+    });
+    // Load left panel content 
+    fetch('/dashboard/rightpanel.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('right-panel').innerHTML = data;
+    });   
+    function go_to(url) {
+      $('#idContent').set('src', url);
+    }
+    </script>
+</head>
+
+<body onload = "onload_msg()">
+    <!--
+    <div id="output"></div>
+    <div id="left-panel"></div>
+    <div id="main-panel"></div>    
+    <div id="right-panel"></div>    
+    -->
+
+    <cantor-panel id="left-panel" src="/dashboard/leftpanel.html">
+    </cantor-panel>
+    <cantor-panel id="main-panel" src="/dashboard/mainpanel.html">
+    </cantor-panel>
+    <cantor-panel id="right-panel" src="/dashboard/rightpanel.html">
+    </cantor-panel>
+
+</body>
+
+</html>
