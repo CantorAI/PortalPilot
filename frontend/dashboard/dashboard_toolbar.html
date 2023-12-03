@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - toolbar</title>    
+    <script>
+        var actMap = '{}';
+        mgr = null;
+
+        const nodeGraph_key = "nodeGraph";
+        if (typeof _datastore !== "undefined") {
+            if (_datastore.has(nodeGraph_key)) {
+                mgr = _datastore.get(nodeGraph_key);
+                mgr.reInit(idGraphDrawPad, actMap);
+            }
+            else {
+                mgr = new GraphManager(idGraphDrawPad, actMap);
+                _datastore.set(nodeGraph_key, mgr);
+            }
+        }
+        else {
+            mgr = new GraphManager(idGraphDrawPad, actMap);
+        }
+
+        function newDataset() {
+            let objType = "Dataset";
+            let desc = "";
+            let pinStr = '[\
+                {\
+                    "Name": "output",\
+                        "Dir": "out",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                }\
+             ]';
+            mgr.newObj(objType, desc, pinStr);
+        }
+        function newSink() {
+            let objType = "Sink";
+            let desc = "";
+            let pinStr = '[\
+                {\
+                    "Name": "input",\
+                        "Dir": "in",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                }\
+             ]';
+            mgr.newObj(objType, desc, pinStr);
+        }
+        function newFermat() {
+            let objType = "Fermat";
+            let desc = "";
+            let pinStr = '[\
+                {\
+                    "Name": "input",\
+                        "Dir": "in",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                },\
+                {\
+                    "Name": "output",\
+                        "Dir": "out",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                }\
+             ]';
+            mgr.newObj(objType, desc, pinStr);
+        }
+        function newTee() {
+            let objType = "Tee";
+            let desc = "";
+            let pinStr = '[\
+                {\
+                    "Name": "input",\
+                        "Dir": "in",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                },\
+                {\
+                    "Name": "output1",\
+                        "Dir": "out",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                },\
+                {\
+                    "Name": "output2",\
+                        "Dir": "out",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                }\
+             ]';
+            mgr.newObj(objType, desc, pinStr);
+        }
+        function newMux() {
+            let objType = "Mux";
+            let desc = "";
+            let pinStr = '[\
+                {\
+                    "Name": "input1",\
+                        "Dir": "in",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                },\
+                {\
+                    "Name": "input2",\
+                        "Dir": "in",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                },\
+                {\
+                    "Name": "output",\
+                        "Dir": "out",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                }\
+             ]';
+            mgr.newObj(objType, desc, pinStr);
+        }
+    </script>
+</head>
+<body style="background-color:red">
+    <div style="flex: 1 1 auto; padding-left: 5px; display: flex; flex-wrap: nowrap;
+       margin-bottom: 3px;
+       border: solid 0.0em gold;
+       border-bottom-color: blue; border-bottom-width: 2px;">
+        <a class="MenuItem" onclick="mgr.newNode();">New</a>
+        <a class="MenuItem" onclick="mgr.deleteCurObj();">Delete</a>
+        <a class="MenuItem" onclick="$('a',this.parentNode).removeClass('active');$(this).addClass('active');$('#idMain').set('src','/Health/test_health.htm');">Test</a>        
+        <a class="MenuItem" onclick="newTee();">Save</a>
+    </div>
+    <div>
+        <canvas id="idGraphDrawPad" style="width:100%;height:100%;"
+                oncontextmenu="return false;">
+        </canvas>
+    </div>
+</body>
+</html>

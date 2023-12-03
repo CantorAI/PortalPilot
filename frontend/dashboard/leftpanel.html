@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - sidepanel </title>   
+    <!--
+    <script src="../../../../Galaxy/Javascript/parse_dataframe.js"></script>
+    <script src="../../../../Galaxy/Javascript/draw.js"></script>
+    <script src="../../../../Cantor/src/WebEngine/cantor.ws.js"></script>
+    -->
+    <script src="/c/users/victor/projects/CantorAI/Galaxy/Javascript/parse_dataframe.js"></script>
+    <script src="/c/users/victor/projects/CantorAI/Galaxy/Javascript/draw.js"></script>
+    <script src="/c/users/victor/projects/CantorAI/Cantor/src/WebEngine/cantor.ws.js"></script>
+    <script>
+        var socket = new CantorWebSocket("ws://localhost:8080");
+        socket.connect();
+        const filterList = [];
+
+        async function FetchfilterList() {
+            //filterList = [];
+            //filterList.length = 0;
+            //document.getElementById("output").innerHTML = "FetchfilterList() called"; 
+            while(filterList.length > 0) {
+                filterList.pop();
+            }
+
+            let retVal = await socket.call("retrieveFilterList");
+            if (retVal == null || retVal.length < 2) {
+                return;
+            }
+            let data = retVal[1];
+            if (data == null) {
+                return;
+            }
+			else {
+
+                let output = '';
+                document.getElementById('output_filterList').innerHTML = '';
+                data = JSON.parse(retVal);
+                // Display top categories 
+                for (let cat in data) {
+                    output += `<h3>${cat}</h3>`;
+                    // Display middle level items
+                    for (let i=0; i<data[cat].length; i++) {
+                        let filterName = Object.keys(data[cat][i])[0];
+                        // let filterDll = Object.keys(data[cat][i])[1];
+                        output += "<p>";
+                        output += filterName;
+                        output += "</p>";
+                        // filterList.push({filterName, filterDll})
+                        filterList.push(filterName)
+                    }
+                    
+                    output += '<br/><br/>';
+                }
+                document.getElementById('output_filterList').innerHTML = output;            
+                updateSelect();
+			}
+        }
+
+        function create_new_model() {
+          // Code to create new model
+          alert("Creating new model"); 
+        }
+        function save_model() {
+          // Code to create new model
+          alert("save current model"); 
+        }
+    </script>
+</head>
+
+<body>
+    <!--
+    <div id="output_filterList" onload="FetchfilterList()"></div>
+    -->
+    <div>
+        <button onclick="FetchfilterList()">Fetch Filter List</button>
+    </div>
+    <div id="output_filterList"></div>
+
+    <div>
+        <label>Builtin Models(Filters)</label>
+    </div>
+    <p> ------------------------</p>
+    <div>
+        DIY Models
+        <button onclick="create_new_model()">New Model</button>
+        <button onclick="save_model()">Save Model</button>
+
+    </div>
+    <p> ------------------------</p>
+    <div> 
+        <p> Download Third Party Models </p>
+        <p><a href="https://huggingface.co/">Hugging Face</a></p>
+        <p><a href="https://civitai.com/">Civitai</a></p>
+        <p><a href="https://discord.com/">Discord</a></p>
+        <p><a href="https://www.modelzoo.co/">Model Zoo </a></p>
+    </div>
+    
+</body>
+</html>

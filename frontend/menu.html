@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>xlang menu</title>
+        <title>menu</title>
     </head>
     <body>
         <script>
@@ -42,11 +42,17 @@
             }
         </style>
         <div style="flex: 0 0 auto;padding-top:0px;padding-left:5px;">
-            <img src="images/cantor_icon.jpg"/>
+            <img src="images/cantor_icon.jpg">
         </div>
+
         <div style="flex:1 1 auto;padding-left: 5px;display: flex;flex-wrap: nowrap;margin-bottom: 3px;">
+            <a class="MenuItem">Project</a>
             <a class="MenuItem"
-               onclick="$('a',this.parentNode).removeClass('active');$(this).addClass('active');$('#idMain').set('src','dashboard.html');">Dashboard</a>
+               onclick="$('a',this.parentNode).removeClass('active');$(this).addClass('active');$('#idMain').set('src','designstudio.html');">Design Studio</a>
+            <a class="MenuItem"
+               onclick="$('a',this.parentNode).removeClass('active');$(this).addClass('active');$('#idMain').set('src','test_metrics.html');">Metrics</a>
+            <a class="MenuItem"
+               onclick="$('a',this.parentNode).removeClass('active');$(this).addClass('active');$('#idMain').set('src','/dashboard/nodemap.html');">Nodemap</a>
             <a class="MenuItem"
                onclick="$('a',this.parentNode).removeClass('active');$(this).addClass('active');$('#idMain').set('src','notebook.html');">Notebook</a>
             <a class="MenuItem"
