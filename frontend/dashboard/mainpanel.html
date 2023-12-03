@@ -20,17 +20,45 @@
         }
     </style>
     <script>
-    </script>  
+        function selectPipeline(){
+            var select = document.getElementById('pipeline');
+            var pipeline = select.options[select.selectedIndex].value.trim();
+        }
+        function updateSelect() {
+            let select = document.getElementById('pipeline');
+            while (select.options.length > 0) {                
+                select.remove(0);
+            }     
+            if(filterList.length == 0) {
+                select.disabled = true;
+            } 
+            else {
+                for(let f of filterList) {
+                    let opt = document.createElement('option');
+                    opt.value = f;
+                    opt.text = f;
+                    select.appendChild(opt);
+                }
+                select.disabled = false; // Enable
+            }
+        }
+    </script>
+
 </head>
 <body>      
         <div id="main-panel">        
           <div id="toolbar">
-            <!-- Toolbar buttons -->
-            <button>New Design</button>
-            <button>Save Design</button>
-            <button>Run Design</button>
-          </div>
-        
+            <div>
+                <h4>Pipeline:</h4>
+                <select id="pipeline">
+                <option value="">--Select--</option> 
+                </select>
+                <button onclick="selectPipeline()">Open</button>
+                <button>New</button>
+                <button disabled>Save</button>
+                <button disabled>Run</button>
+            </div>
+          </div>       
           <div id="main-view">
             <!-- Main content view -->
           </div>
