@@ -38,7 +38,8 @@
                 data = JSON.parse(retVal);
                 // Display top categories 
                 for (let cat in data) {
-                    output += `<h3>${cat}</h3>`;
+                     output += `<h4>${cat}</h4>`;
+                    // output += `${cat}`;
                     // Display middle level items
                     for (let i=0; i<data[cat].length; i++) {
                         let filterName = Object.keys(data[cat][i])[0];
@@ -48,8 +49,7 @@
                         output += "</p>";
                         // filterList.push({filterName, filterDll})
                         filterList.push(filterName)
-                    }
-                    
+                    }                    
                     output += '<br/><br/>';
                 }
                 document.getElementById('output_filterList').innerHTML = output;            
@@ -57,14 +57,12 @@
 			}
         }
 
-        function create_new_model() {
-          // Code to create new model
-          alert("Creating new model"); 
-        }
-        function save_model() {
-          // Code to create new model
-          alert("save current model"); 
-        }
+        //function create_new_model() {
+        //  alert("Creating new model"); 
+        //}
+        //function save_model() {
+        //  alert("save current model"); 
+        //}
     </script>
 </head>
 
