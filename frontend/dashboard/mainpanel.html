@@ -59,10 +59,21 @@
                 <button disabled>Run</button>
             </div>
           </div>       
-          <div id="main-view">
-            <!-- Main content view -->
-          </div>
-        
+          <!--
+          <cantor-panel style="flex: 1 1 auto;
+                border: solid 0.0em gold;
+                border-bottom-width:0.1em;
+                border-bottom-color:blue;
+                margin-bottom:1em;
+                width: auto;" src="/dashboard/graph.html">
+          </cantor-panel>
+          -->
+          <div>
+            <canvas id="idGraphDrawPad" style="width:100%;height:100%;"
+                    oncontextmenu="return false;">
+            </canvas>
+        </div>
+    
         </div>
 </body>
 </html>
