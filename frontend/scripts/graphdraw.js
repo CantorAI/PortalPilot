@@ -6,7 +6,7 @@ const PinDirection = Object.freeze({ "in": 1, "out": 2 })
 const HitState = Object.freeze({ "Hit": 1, "HitPin": 2, "NotHit": 3 })
 
 CanvasRenderingContext2D.prototype.roundRect = function (sx, sy, w, h, r) {
-    let ex = sx + w;
+    let ex = sx + w
     let ey = sy + h;
     var r2d = Math.PI / 180;
     if ((ex - sx) - (2 * r) < 0) { r = ((ex - sx) / 2); } //ensure that the radius isn't too large for x
@@ -414,7 +414,6 @@ class GraphManager {
     }
     newNode() {
         var obj = new Node(this);
-
         let pt = new Point(obj.x, obj.y);
         pt = this.transformPoint(pt);
         obj.x = pt.x;
@@ -529,6 +528,7 @@ class GraphManager {
         return jsonStr;
     }
     pipeline_run() {
+        alert ("pipeline_run");
         let jsonObList = [];
         let retValues = [];
         for (let idx in this.objs) {
@@ -631,6 +631,7 @@ class GraphManager {
         }
     }
     CreateNewPipeline() {
+        alert ("CreateNewPipeline");
         if (idToolbarInput != null) {
             idToolbarInput.value = "";
         }

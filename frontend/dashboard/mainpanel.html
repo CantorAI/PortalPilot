@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard - main panel </title>    
+    <title>Design Studio - main panel </title>    
     <style>
         #panel {
           width: 80%;
@@ -19,6 +19,11 @@
           min-height: 300px;
         }
     </style>
+    <!--
+    <script src="/c/users/victor/projects/CantorAI/Galaxy/Javascript/parse_dataframe.js"></script>
+    <script src="/c/users/victor/projects/CantorAI/Galaxy/Javascript/draw.js"></script>
+    <script src="/c/users/victor/projects/CantorAI/Cantor/src/WebEngine/cantor.ws.js"></script>
+    -->
     <script>
         function selectPipeline(){
             var select = document.getElementById('pipeline');
@@ -33,47 +38,94 @@
                 select.disabled = true;
             } 
             else {
-                for(let f of filterList) {
+                //for(let f of filterList) {
+                //    let opt = document.createElement('option');
+                //    opt.value = f;
+                //    opt.text = f;
+                //    select.appendChild(opt);
+                //}
+
+                for(i = 0;i <3;  i++) {                    
                     let opt = document.createElement('option');
-                    opt.value = f;
-                    opt.text = f;
+                    opt.value = "pipeline"+i;
+                    opt.text = "pipeline"+i;
                     select.appendChild(opt);
                 }
                 select.disabled = false; // Enable
             }
         }
-    </script>
+        
+        function newPipeline(){ // ask for the name of the pipeline, issue API to save file in the backend
+           retVal = mgr.CreateNewPipeline();
+           document.getElementById("output").innerHTML = retVal; 
+        }
 
+        async function savePipeline(){ // will be replaced auto save which returns the file name
+            jsonObjNode = mgr.save();
+            document.getElementById('output').innerHTML += jsonObjNode;          
+            let retVal = await socket.call("savePipeline2File", jsonObjNode, "C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\test\\design\\project_a\\proj_a_pipeline1.pl");
+            if (retVal == null ) {
+                return;
+            }
+            document.getElementById("output").innerHTML = "Pipeline saved:" + retVal; 
+        }
+
+        async function runPipeline_Old(){// obsolete
+           jsonPipeline = mgr.pipeline_run();
+           document.getElementById("output").innerHTML = jsonPipeline; 
+           document.getElementById("output").innerHTML = "Send pipeline to run in backend"; 
+           let retVal = await socket.call("runPipeline", jsonPipeline); 
+           if (retVal == null ) {
+               return;
+           }
+           document.getElementById("output").innerHTML = "Pipeline executed:" + retVal; 
+        }
+        async function runPipeline(fileName){
+           jsonPipeline = mgr.pipeline_run();
+           document.getElementById("output").innerHTML = jsonPipeline; 
+           document.getElementById("output").innerHTML = "Send pipeline to run in backend"; 
+           let retVal = await socket.call("runPipeline", fileName); //
+           if (retVal == null ) {
+               return;
+           }
+           document.getElementById("output").innerHTML = "Pipeline executed:" + retVal; 
+        }
+
+
+    </script>
 </head>
+
 <body>      
-        <div id="main-panel">        
-          <div id="toolbar">
-            <div>
-                <h4>Pipeline:</h4>
-                <select id="pipeline">
-                <option value="">--Select--</option> 
-                </select>
-                <button onclick="selectPipeline()">Open</button>
-                <button>New</button>
-                <button disabled>Save</button>
-                <button disabled>Run</button>
-            </div>
-          </div>       
-          <!--
-          <cantor-panel style="flex: 1 1 auto;
-                border: solid 0.0em gold;
-                border-bottom-width:0.1em;
-                border-bottom-color:blue;
-                margin-bottom:1em;
-                width: auto;" src="/dashboard/graph.html">
-          </cantor-panel>
-          -->
-          <div>
-            <canvas id="idGraphDrawPad" style="width:100%;height:100%;"
-                    oncontextmenu="return false;">
-            </canvas>
-        </div>
-    
-        </div>
+    <div id="main-panel">        
+        <div id="toolbar">
+            <h4>Pipeline:</h4>
+            <select id="pipeline">
+            <option value="">--Select--</option> 
+            </select>
+            <button onclick="selectPipeline()">Open</button>
+            <button onclick="newPipeline()">New</button>
+            <!--
+            <button disabled onclick="mgr.save()">Save</button> 
+            <button disabled onclick="runPipeline()">Run</button>
+            -->
+            <button onclick="savePipeline()">Save</button> 
+            <button onclick="runPipeline()">Run</button>
+        </div>       
+        <!--
+        <cantor-panel style="flex: 1 1 auto;
+            border: solid 0.0em gold;
+            border-bottom-width:0.1em;
+            border-bottom-color:blue;
+            margin-bottom:1em;
+            width: auto;" src="/dashboard/graph.html">
+        </cantor-panel>
+        -->
+        <div>
+        <canvas id="idGraphDrawPad" style="width:100%;height:100%;"
+                oncontextmenu="return false;">
+        </canvas>
+        </div>       
+   
+    </div>
 </body>
 </html>

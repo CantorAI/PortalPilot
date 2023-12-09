@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard - leftpanel </title>   
+    <title>Design Studio - leftpanel </title>   
     <!--
     <script src="../../../../Galaxy/Javascript/parse_dataframe.js"></script>
     <script src="../../../../Galaxy/Javascript/draw.js"></script>
@@ -15,7 +15,7 @@
         socket.connect();
         const filterList = [];
 
-        async function FetchfilterList() {
+        async function FetchfilterList_old() {
             //filterList = [];
             //filterList.length = 0;
             //document.getElementById("output").innerHTML = "FetchfilterList() called"; 
@@ -42,51 +42,181 @@
                     // output += `${cat}`;
                     // Display middle level items
                     for (let i=0; i<data[cat].length; i++) {
-                        let filterName = Object.keys(data[cat][i])[0];
-                        // let filterDll = Object.keys(data[cat][i])[1];
-                        output += "<p>";
-                        //output += "<button onclick='create_new_model()'>" 
-                        output += "<button onclick='new"
-                        output += filterName
-                        output += "()'>" 
-                        output += filterName;
+                        let filterType = Object.keys(data[cat][i])[0];
+                        let filterDesignPage  = data[cat][i][filterType]["designpage "];  //padding space is needed
+                        let filterDll  = data[cat][i][filterType]["uri "];
+                        let filterDesc = "'" //support spaces in description field
+                        filterDesc += data[cat][i][filterType]["desription "];
+                        filterDesc += "'" 
+                        if (i % 2 == 0) {//2 items on each row 
+                            output += "<p>";
+                        }
+                        //output += "<button onclick='new"
+                        //output += filterType
+                        //output += "()'>" 
+                        //output += filterType;
+                        //output += "</button>";
+
+                        /*
+                        output += "<button onclick='newFilter(\\042";
+                        output += filterType;
+                        output += "\\042,\\042"
+                        output += filterDll;
+                        output += "\\042,\\042"
+                        output += filterDesc
+                        output += "\\042)'>" ;
+                        output += filterType;
                         output += "</button>";
-                        output += "</p>";
-                        // filterList.push({filterName, filterDll})
-                        filterList.push(filterName)
+                        */
+
+                        output += "<button onclick='newFilter(&quot;";
+                        output += filterType;
+                        output += "&quot;,&quot;"
+                        output += filterDll;
+                        output += "&quot;,&quot;"
+                        output += filterDesc
+                        output += "&quot;)'>" ;
+                        output += filterType;
+                        output += "</button>";
+
+                        if (i % 2 != 0) {
+                            output += "</p>";
+                        }
+                        // filterList.push({filterType, filterDll})
+                        filterList.push(filterType)
                     }                    
                 }
                 document.getElementById('output_filterList').innerHTML = output;            
                 updateSelect();
 			}
-        }
+        } //FetchfilterList_Old
 
-        //function create_new_model() {
-        //  alert("Creating new model"); 
-        //}
-        //function save_model() {
-        //  alert("save current model"); 
-        //}
+        async function FetchfilterList() {
+            //filterList = [];
+            //filterList.length = 0;
+            //document.getElementById("output").innerHTML = "FetchfilterList() called"; 
+            while(filterList.length > 0) {
+                filterList.pop();
+            }
+
+            let retVal = await socket.call("retrieveFilterList");
+            if (retVal == null || retVal.length < 2) {
+                return;
+            }
+            let data = retVal[1];
+            if (data == null) {
+                return;
+            }
+			else {
+
+                let output = '';
+                document.getElementById('output_filterList').innerHTML = '';
+                data = JSON.parse(retVal);
+                // Display top categories 
+                for (let cat in data) {
+                     output += `<h4>${cat}</h4>`;
+                     // Display middle level items
+                    for (let i=0; i<data[cat].length; i++) {
+                        //output = "";
+                        let filterType = Object.keys(data[cat][i])[0];
+                        let filterDesignPage  = data[cat][i][filterType]["designpage "];  //padding space is needed
+                        let filterDll  = data[cat][i][filterType]["uri "];
+                        let filterDesc = "'" //support spaces in description field
+                        filterDesc += data[cat][i][filterType]["desription "];
+                        filterDesc += "'" 
+                        if (i % 2 == 0) {//2 items on each row 
+                            output += "<p>";
+                        }
+                        output += "<button onclick='newFilter(";
+                        output += "&quot;"
+                        output += filterType
+                        output += "&quot;"
+                        output += ","
+                        output += "&quot;"
+                        output += filterDll
+                        output += "&quot;"
+                        output += ")'>" 
+                        output += filterType;
+                        output += "</button>";
+                        if (i % 2 != 0 || (i == data[cat].length - 1)) {
+                            output += "</p>";
+                        }
+                        // filterList.push({filterType, filterDll})
+                        filterList.push(filterType)
+                    }                    
+                }
+                document.getElementById('output_filterList').innerHTML += output;            
+                updateSelect();
+			}
+        } //FetchfilterList
+
         var actMap = '{}';
         mgr = null;
-
         const nodeGraph_key = "nodeGraph";
-        if (typeof _datastore !== "undefined") {
-            if (_datastore.has(nodeGraph_key)) {
-                mgr = _datastore.get(nodeGraph_key);
-                mgr.reInit(idGraphDrawPad, actMap);
+
+        function init() {
+            if ( _datastore == null) 
+                _datastore = new Map();
+            if (typeof _datastore !== "undefined") {
+                if (_datastore.has(nodeGraph_key)) {
+                    mgr = _datastore.get(nodeGraph_key);
+                    mgr.reInit(idGraphDrawPad, actMap);
+                }
+                else {
+                    mgr = new GraphManager(idGraphDrawPad, actMap);
+                    _datastore.set(nodeGraph_key, mgr);
+                }
             }
             else {
                 mgr = new GraphManager(idGraphDrawPad, actMap);
-                _datastore.set(nodeGraph_key, mgr);
             }
         }
-        else {
-            mgr = new GraphManager(idGraphDrawPad, actMap);
-        }
+
+        init();
+
+        async function newFilter_old(filterType, filterDll, filterDesc) {
+            alert ("newFilter: " + filterType );
+            document.getElementById("output").innerHTML = "to create a " + filterType; 
+            inputPins = await socket.call("retrieveFilterPins", filterType, filterDll, true);
+            outputPins = await socket.call("retrieveFilterPins", filterType, filterDll, false);
+            let pinStr = '[\
+                {\
+                    "Name": "output",\
+                        "Dir": "out",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                }\
+            ]';
+            if (mgr == null){
+                document.getElementById("output").innerHTML = "mgr is null, can not call mgr.newObj"; 
+                init();
+            }
+            mgr.newObj(filterType, filterDesc, pinStr);
+        }    
+        async function newFilter(filterType, filterDll) {
+            document.getElementById("output").innerHTML = "to create a " + filterType; 
+            inputPins = await socket.call("retrieveFilterPins", filterType, filterDll, 1);  //don't use bool or string for the pin type
+            outputPins = await socket.call("retrieveFilterPins", filterType, filterDll, 0);
+            let pinStr = '[\
+                {\
+                    "Name": "output",\
+                        "Dir": "out",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                }\
+            ]';
+            if (mgr == null){
+                document.getElementById("output").innerHTML = "mgr is null, can not call mgr.newObj"; 
+                init();
+            }
+            mgr.newObj(filterType, "", pinStr);
+        }    
 
         function newdataset() {
-            alert("Creating newDataset"); 
+            //alert ("to create a dataset");
+            document.getElementById("output").innerHTML = "to create a dataset"; 
             let objType = "Dataset";
             let desc = "";
             let pinStr = '[\
@@ -97,11 +227,15 @@
                                 "any"\
                             ]\
                 }\
-             ]';
+            ]';
+            if (mgr == null){
+                //alert ("mgr is null, can not call mgr.newObj");
+                document.getElementById("output").innerHTML = "mgr is null, can not call mgr.newObj"; 
+                init();
+            }
             mgr.newObj(objType, desc, pinStr);
         }
         function newsink() {
-            alert("Creating newsink"); 
             let objType = "Sink";
             let desc = "";
             let pinStr = '[\
@@ -112,11 +246,15 @@
                                 "any"\
                             ]\
                 }\
-             ]';
+            ]';
+            if (mgr == null){
+                //alert ("mgr is null, can not call mgr.newObj");
+                document.getElementById("output").innerHTML = "mgr is null, can not call mgr.newObj"; 
+                init();
+            }
             mgr.newObj(objType, desc, pinStr);
         }
         function newfermat() {
-            alert("Creating newfermat"); 
             let objType = "Fermat";
             let desc = "";
             let pinStr = '[\
@@ -134,11 +272,94 @@
                                 "any"\
                             ]\
                 }\
-             ]';
+            ]';
+            if (mgr == null){
+                //alert ("mgr is null, can not call mgr.newObj");
+                document.getElementById("output").innerHTML = "mgr is null, can not call mgr.newObj"; 
+                init();
+            }
             mgr.newObj(objType, desc, pinStr);
         }
+        function newllmAgent() {
+            let objType = "llmAgent";
+            let desc = "";
+            let pinStr = '[\
+                {\
+                    "Name": "input",\
+                        "Dir": "in",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                },\
+                {\
+                    "Name": "output",\
+                        "Dir": "out",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                }\
+            ]';
+            if (mgr == null){
+                //alert ("mgr is null, can not call mgr.newObj");
+                document.getElementById("output").innerHTML = "mgr is null, can not call mgr.newObj"; 
+                init();
+            }
+            mgr.newObj(objType, desc, pinStr);
+        }
+        function newprompt() {
+            let objType = "Prompt";
+            let desc = "";
+            let pinStr = '[\
+                {\
+                    "Name": "input",\
+                        "Dir": "in",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                },\
+                {\
+                    "Name": "output",\
+                        "Dir": "out",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                }\
+            ]';
+            if (mgr == null){
+                //alert ("mgr is null, can not call mgr.newObj");
+                document.getElementById("output").innerHTML = "mgr is null, can not call mgr.newObj"; 
+                init();
+            }
+            mgr.newObj(objType, desc, pinStr);
+        }
+        function newhealth() {
+            let objType = "Health";
+            let desc = "";
+            let pinStr = '[\
+                {\
+                    "Name": "input",\
+                        "Dir": "in",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                },\
+                {\
+                    "Name": "output",\
+                        "Dir": "out",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                }\
+            ]';
+            if (mgr == null){
+                //alert ("mgr is null, can not call mgr.newObj");
+                document.getElementById("output").innerHTML = "mgr is null, can not call mgr.newObj"; 
+                init();
+            }
+            mgr.newObj(objType, desc, pinStr);
+        }
+
         function newtee() {
-            alert("Creating newtee"); 
             let objType = "Tee";
             let desc = "";
             let pinStr = '[\
@@ -163,11 +384,15 @@
                                 "any"\
                             ]\
                 }\
-             ]';
+            ]';
+            if (mgr == null){
+                //alert ("mgr is null, can not call mgr.newObj");
+                document.getElementById("output").innerHTML = "mgr is null, can not call mgr.newObj"; 
+                init();
+            }
             mgr.newObj(objType, desc, pinStr);
         }
         function newmux() {
-            alert("Creating newmux"); 
             let objType = "Mux";
             let desc = "";
             let pinStr = '[\
@@ -192,8 +417,21 @@
                                 "any"\
                             ]\
                 }\
-             ]';
+            ]';
+            if (mgr == null){
+                //alert ("mgr is null, can not call mgr.newObj");
+                document.getElementById("output").innerHTML = "mgr is null, can not call mgr.newObj"; 
+                init();
+            }
             mgr.newObj(objType, desc, pinStr);
+        }
+        function deleteCurObj() {
+            if (mgr == null){
+                //alert ("mgr is null, can not call mgr.newObj");
+                document.getElementById("output").innerHTML = "mgr is null, can not call mgr.deleteCurObj"; 
+                init();
+            }
+            mgr.deleteCurObj();
         }
 
     </script>
@@ -210,22 +448,8 @@
         <button onclick="FetchfilterList()">Fetch Filter List</button>
     </div>
     <div id="output_filterList"></div>
-
-    <!--
     <p> ------------------------</p>
-    <div>
-        DIY Models
-        <button onclick="create_new_model()">New Model</button>
-        <button onclick="save_model()">Save Model</button>
-
-    </div>
-    -->
-    <p> ------------------------</p>
-    <div>
-        <p> <h4>Customerized Model</h4></p>
-        <p> <button onclick="mgr.newNode()">New</button></p>
-    </div>
-
+    <div> <button onclick="deleteCurObj();">Delete</button></div>
     <p> ------------------------</p>
     <div> 
         <p> <h4>Download Third Party Models </h4></p>
