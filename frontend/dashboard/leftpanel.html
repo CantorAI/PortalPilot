@@ -2,11 +2,6 @@
 <html>
 <head>
     <title>Design Studio - leftpanel </title>   
-    <!--
-    <script src="../../../../Galaxy/Javascript/parse_dataframe.js"></script>
-    <script src="../../../../Galaxy/Javascript/draw.js"></script>
-    <script src="../../../../Cantor/src/WebEngine/cantor.ws.js"></script>
-    -->
     <script src="/c/users/victor/projects/CantorAI/Galaxy/Javascript/parse_dataframe.js"></script>
     <script src="/c/users/victor/projects/CantorAI/Galaxy/Javascript/draw.js"></script>
     <script src="/c/users/victor/projects/CantorAI/Cantor/src/WebEngine/cantor.ws.js"></script>
@@ -195,10 +190,46 @@
             mgr.newObj(filterType, filterDesc, pinStr);
         }    
         async function newFilter(filterType, filterDll) {
-            document.getElementById("output").innerHTML = "to create a " + filterType; 
-            inputPins = await socket.call("retrieveFilterPins", filterType, filterDll, 1);  //don't use bool or string for the pin type
-            outputPins = await socket.call("retrieveFilterPins", filterType, filterDll, 0);
-            let pinStr = '[\
+            document.getElementById("output").innerHTML = "to create a " + filterType + "!"; 
+            //inputPins = await socket.call("retrieveFilterPins", filterType, filterDll, 1);  //don't use bool or string for the pin type
+            //outputPins = await socket.call("retrieveFilterPins", filterType, filterDll, 0);
+            filterDllWords = filterDll.split(".");
+            filterDllShort = filterDllWords[0]; // remove .dll
+            filterTypeShort = filterType.trim(); // remove spaces
+            alert (filterDllShort+filterTypeShort)
+            filterPropertyList = await socket.call("retrieveFilterPropertyListbyType", filterTypeShort, filterDllShort);//not work, why?
+            //filterPropertyList = await socket.call("retrieveFilterPropertyListbyType", "dataset", "galaxy_dataset");//working 
+
+            pinStr = "";
+            if (filterType == "dataset ")
+                pinStr = '[\
+                {\
+                    "Name": "output",\
+                        "Dir": "out",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                }\
+                ]';
+            else if (filterType == "sink ")
+                pinStr = '[\
+                {\
+                    "Name": "input",\
+                        "Dir": "in",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                }\
+                ]';
+            else if (filterType == "fermat ")
+                pinStr = '[\
+                {\
+                    "Name": "input",\
+                        "Dir": "in",\
+                            "frametypes": [\
+                                "any"\
+                            ]\
+                },\
                 {\
                     "Name": "output",\
                         "Dir": "out",\
@@ -207,224 +238,115 @@
                             ]\
                 }\
             ]';
+            else if (filterType == "llmAgent ")
+                pinStr = '[\
+                    {\
+                        "Name": "input",\
+                            "Dir": "in",\
+                                "frametypes": [\
+                                    "any"\
+                                ]\
+                    },\
+                    {\
+                        "Name": "output",\
+                            "Dir": "out",\
+                                "frametypes": [\
+                                    "any"\
+                                ]\
+                    }\
+                ]';
+            else if (filterType == "prompt ")
+                pinStr = '[\
+                    {\
+                        "Name": "input",\
+                            "Dir": "in",\
+                                "frametypes": [\
+                                    "any"\
+                                ]\
+                    },\
+                    {\
+                        "Name": "output",\
+                            "Dir": "out",\
+                                "frametypes": [\
+                                    "any"\
+                                ]\
+                    }\
+                ]';
+            else if (filterType == "health ")
+                pinStr = '[\
+                    {\
+                        "Name": "input",\
+                            "Dir": "in",\
+                                "frametypes": [\
+                                    "any"\
+                                ]\
+                    },\
+                    {\
+                        "Name": "output",\
+                            "Dir": "out",\
+                                "frametypes": [\
+                                    "any"\
+                                ]\
+                    }\
+                ]';
+            else if (filterType == "tee ")
+                pinStr = '[\
+                    {\
+                        "Name": "input",\
+                            "Dir": "in",\
+                                "frametypes": [\
+                                    "any"\
+                                ]\
+                    },\
+                    {\
+                        "Name": "output1",\
+                            "Dir": "out",\
+                                "frametypes": [\
+                                    "any"\
+                                ]\
+                    },\
+                    {\
+                        "Name": "output2",\
+                            "Dir": "out",\
+                                "frametypes": [\
+                                    "any"\
+                                ]\
+                    }\
+                ]';            
+            else if (filterType == "mux ")
+                pinStr = '[\
+                    {\
+                        "Name": "input1",\
+                            "Dir": "in",\
+                                "frametypes": [\
+                                    "any"\
+                                ]\
+                    },\
+                    {\
+                        "Name": "input2",\
+                            "Dir": "in",\
+                                "frametypes": [\
+                                    "any"\
+                                ]\
+                    },\
+                    {\
+                        "Name": "output",\
+                            "Dir": "out",\
+                                "frametypes": [\
+                                    "any"\
+                                ]\
+                    }\
+                ]';
+
             if (mgr == null){
                 document.getElementById("output").innerHTML = "mgr is null, can not call mgr.newObj"; 
                 init();
             }
+            //objType = filterType.charAt(0).toUpperCase() + string.slice(1);
+            //mgr.newObj(objType, "", pinStr);
             mgr.newObj(filterType, "", pinStr);
         }    
 
-        function newdataset() {
-            //alert ("to create a dataset");
-            document.getElementById("output").innerHTML = "to create a dataset"; 
-            let objType = "Dataset";
-            let desc = "";
-            let pinStr = '[\
-                {\
-                    "Name": "output",\
-                        "Dir": "out",\
-                            "frametypes": [\
-                                "any"\
-                            ]\
-                }\
-            ]';
-            if (mgr == null){
-                //alert ("mgr is null, can not call mgr.newObj");
-                document.getElementById("output").innerHTML = "mgr is null, can not call mgr.newObj"; 
-                init();
-            }
-            mgr.newObj(objType, desc, pinStr);
-        }
-        function newsink() {
-            let objType = "Sink";
-            let desc = "";
-            let pinStr = '[\
-                {\
-                    "Name": "input",\
-                        "Dir": "in",\
-                            "frametypes": [\
-                                "any"\
-                            ]\
-                }\
-            ]';
-            if (mgr == null){
-                //alert ("mgr is null, can not call mgr.newObj");
-                document.getElementById("output").innerHTML = "mgr is null, can not call mgr.newObj"; 
-                init();
-            }
-            mgr.newObj(objType, desc, pinStr);
-        }
-        function newfermat() {
-            let objType = "Fermat";
-            let desc = "";
-            let pinStr = '[\
-                {\
-                    "Name": "input",\
-                        "Dir": "in",\
-                            "frametypes": [\
-                                "any"\
-                            ]\
-                },\
-                {\
-                    "Name": "output",\
-                        "Dir": "out",\
-                            "frametypes": [\
-                                "any"\
-                            ]\
-                }\
-            ]';
-            if (mgr == null){
-                //alert ("mgr is null, can not call mgr.newObj");
-                document.getElementById("output").innerHTML = "mgr is null, can not call mgr.newObj"; 
-                init();
-            }
-            mgr.newObj(objType, desc, pinStr);
-        }
-        function newllmAgent() {
-            let objType = "llmAgent";
-            let desc = "";
-            let pinStr = '[\
-                {\
-                    "Name": "input",\
-                        "Dir": "in",\
-                            "frametypes": [\
-                                "any"\
-                            ]\
-                },\
-                {\
-                    "Name": "output",\
-                        "Dir": "out",\
-                            "frametypes": [\
-                                "any"\
-                            ]\
-                }\
-            ]';
-            if (mgr == null){
-                //alert ("mgr is null, can not call mgr.newObj");
-                document.getElementById("output").innerHTML = "mgr is null, can not call mgr.newObj"; 
-                init();
-            }
-            mgr.newObj(objType, desc, pinStr);
-        }
-        function newprompt() {
-            let objType = "Prompt";
-            let desc = "";
-            let pinStr = '[\
-                {\
-                    "Name": "input",\
-                        "Dir": "in",\
-                            "frametypes": [\
-                                "any"\
-                            ]\
-                },\
-                {\
-                    "Name": "output",\
-                        "Dir": "out",\
-                            "frametypes": [\
-                                "any"\
-                            ]\
-                }\
-            ]';
-            if (mgr == null){
-                //alert ("mgr is null, can not call mgr.newObj");
-                document.getElementById("output").innerHTML = "mgr is null, can not call mgr.newObj"; 
-                init();
-            }
-            mgr.newObj(objType, desc, pinStr);
-        }
-        function newhealth() {
-            let objType = "Health";
-            let desc = "";
-            let pinStr = '[\
-                {\
-                    "Name": "input",\
-                        "Dir": "in",\
-                            "frametypes": [\
-                                "any"\
-                            ]\
-                },\
-                {\
-                    "Name": "output",\
-                        "Dir": "out",\
-                            "frametypes": [\
-                                "any"\
-                            ]\
-                }\
-            ]';
-            if (mgr == null){
-                //alert ("mgr is null, can not call mgr.newObj");
-                document.getElementById("output").innerHTML = "mgr is null, can not call mgr.newObj"; 
-                init();
-            }
-            mgr.newObj(objType, desc, pinStr);
-        }
-
-        function newtee() {
-            let objType = "Tee";
-            let desc = "";
-            let pinStr = '[\
-                {\
-                    "Name": "input",\
-                        "Dir": "in",\
-                            "frametypes": [\
-                                "any"\
-                            ]\
-                },\
-                {\
-                    "Name": "output1",\
-                        "Dir": "out",\
-                            "frametypes": [\
-                                "any"\
-                            ]\
-                },\
-                {\
-                    "Name": "output2",\
-                        "Dir": "out",\
-                            "frametypes": [\
-                                "any"\
-                            ]\
-                }\
-            ]';
-            if (mgr == null){
-                //alert ("mgr is null, can not call mgr.newObj");
-                document.getElementById("output").innerHTML = "mgr is null, can not call mgr.newObj"; 
-                init();
-            }
-            mgr.newObj(objType, desc, pinStr);
-        }
-        function newmux() {
-            let objType = "Mux";
-            let desc = "";
-            let pinStr = '[\
-                {\
-                    "Name": "input1",\
-                        "Dir": "in",\
-                            "frametypes": [\
-                                "any"\
-                            ]\
-                },\
-                {\
-                    "Name": "input2",\
-                        "Dir": "in",\
-                            "frametypes": [\
-                                "any"\
-                            ]\
-                },\
-                {\
-                    "Name": "output",\
-                        "Dir": "out",\
-                            "frametypes": [\
-                                "any"\
-                            ]\
-                }\
-            ]';
-            if (mgr == null){
-                //alert ("mgr is null, can not call mgr.newObj");
-                document.getElementById("output").innerHTML = "mgr is null, can not call mgr.newObj"; 
-                init();
-            }
-            mgr.newObj(objType, desc, pinStr);
-        }
         function deleteCurObj() {
             if (mgr == null){
                 //alert ("mgr is null, can not call mgr.newObj");
