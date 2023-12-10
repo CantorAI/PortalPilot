@@ -60,10 +60,11 @@
            document.getElementById("output").innerHTML = retVal; 
         }
 
-        async function savePipeline(){ // will be replaced auto save which returns the file name
+        async function savePipeline(fileName){ // will be replaced auto save which returns the file name
             jsonObjNode = mgr.save();
             document.getElementById('output').innerHTML += jsonObjNode;          
-            let retVal = await socket.call("savePipeline2File", jsonObjNode, "C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\test\\design\\project_a\\proj_a_pipeline1.pl");
+            //let retVal = await socket.call("savePipeline2File", jsonObjNode, "C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\test\\design\\project_a\\proj_a_pipeline1.pl");
+            let retVal = await socket.call("savePipeline2File", jsonObjNode, fileName);
             if (retVal == null ) {
                 return;
             }
@@ -83,7 +84,7 @@
         async function runPipeline(fileName){
            jsonPipeline = mgr.save();
            document.getElementById("output").innerHTML = jsonPipeline; 
-           document.getElementById("output").innerHTML = "Send pipeline to run in backend"; 
+           //document.getElementById("output").innerHTML = "Send pipeline to run in backend"; 
            let retVal = await socket.call("runPipeline", fileName); //
            if (retVal == null ) {
                return;
@@ -109,8 +110,8 @@
             <button disabled onclick="mgr.save()">Save</button> 
             <button disabled onclick="runPipeline()">Run</button>
             -->
-            <button onclick="savePipeline()">Save</button> 
-            <button onclick="runPipeline()">Run</button>
+            <button onclick="savePipeline('C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\test\\design\\project_a\\proj_a_pipeline1.pl')">Save</button> 
+            <button onclick="runPipeline('C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\test\\design\\project_a\\proj_a_pipeline1.pl')">Run</button>
         </div>       
         <!--
         <cantor-panel style="flex: 1 1 auto;
