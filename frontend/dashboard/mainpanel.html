@@ -81,7 +81,7 @@
            document.getElementById("output").innerHTML = "Pipeline executed:" + retVal; 
         }
         async function runPipeline(fileName){
-           jsonPipeline = mgr.pipeline_run();
+           jsonPipeline = mgr.save();
            document.getElementById("output").innerHTML = jsonPipeline; 
            document.getElementById("output").innerHTML = "Send pipeline to run in backend"; 
            let retVal = await socket.call("runPipeline", fileName); //
