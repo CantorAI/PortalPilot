@@ -117,10 +117,10 @@ def savePipeline2File(pipelineJsonStr, filePath):
 	# print(pipelineJsonStr)
 	print(filePath)
 
-	openMode = 'w'
-	pipelineJsonStr = str("1234")
-	# f = fs.File(filePath,openMode)
-	f = fs.File("C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\test\\design\\project_a\\proj_a_pipeline1.pl", "w")
+	openMode = "w"
+	print(pipelineJsonStr)
+	f = fs.File(filePath,openMode)
+	# f = fs.File("C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\test\\design\\project_a\\proj_a_pipeline1.pl", "w")
 	# f = fs.File("/C/Users/victor/projects/CantorAI/Galaxy/test/design/project_a/proj_a_pipeline1.pl", "w")
 	if (f != None): 
     	f.write(pipelineJsonStr)
@@ -194,7 +194,7 @@ def json2X(pipelineJsonStr):
 	#end of json2X
 
 
-def runPipeline(pipelineJsonStr):
+def runPipeline_Old(pipelineJsonStr):
 	print("in runPipeline")
 	print(pipelineJsonStr)
 
@@ -217,8 +217,11 @@ def runPipeline(pipelineJsonStr):
 	# set retVal
 	# return retVal to front end
 
-def loadPipeline(fileName):
-	galaxy.LoadPipelineFromFile(fileName) #call Galaxy factory 
+def runPipeline(fileName):
+	print("in runPipeline")
+	print("fileName- ", fileName)
+	#retVal = galaxy.LoadPipelineFromFile("C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\test\\design\\project_a\\proj_a_pipeline1.pl")
+	retVal = galaxy.LoadPipelineFromFile(fileName) #call Galaxy factory 
 
 cantor.RegisterAPI('retrieveFilterList',retrieveFilterList)
 cantor.RegisterAPI('retrieveFilterListRaw',retrieveFilterListRaw)
@@ -228,7 +231,7 @@ cantor.RegisterAPI('retrieveFilterPropertyListbyType',retrieveFilterPropertyList
 # cantor.RegisterAPI('retrieveFilterProperty',retrieveFilterProperty)
 cantor.RegisterAPI('savePipeline2File',savePipeline2File)
 cantor.RegisterAPI('runPipeline',runPipeline) #obsolete
-cantor.RegisterAPI('loadPipeline',loadPipeline)
+# cantor.RegisterAPI('loadPipeline',loadPipeline)
 
 
 
