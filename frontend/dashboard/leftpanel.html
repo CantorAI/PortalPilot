@@ -191,20 +191,21 @@
         }    
         async function newFilter(filterType, filterDll) {
             document.getElementById("output").innerHTML = "to create a " + filterType + "!"; 
-            //inputPins = await socket.call("retrieveFilterPins", filterType, filterDll, 1);  //don't use bool or string for the pin type
-            //outputPins = await socket.call("retrieveFilterPins", filterType, filterDll, 0);
             filterDllWords = filterDll.split(".");
             filterDllShort = filterDllWords[0].trim(); // remove .dll & leading/padding spaces 
             filterTypeShort = filterType.trim(); // remove spaces
-            alert (filterDllShort+filterTypeShort)
-            filterPropertyList = await socket.call("retrieveFilterPropertyListbyType", filterTypeShort, filterDllShort);//not work, why?
+            //alert (filterDllShort+filterTypeShort)
+            //inputPins = await socket.call("retrieveFilterPins", filterTypeShort, filterDllShort, 1);  //don't use bool or string for the pin type
+            //outputPins = await socket.call("retrieveFilterPins", filterTypeShort, filterDllShort, 0);
+            //document.getElementById("output").innerHTML = filterType + " has " + inputPins.length + " inputs, " + outputPins.length + " outputs"; 
+            //filterPropertyList = await socket.call("retrieveFilterPropertyListbyType", filterTypeShort, filterDllShort);//not work, why?
             //filterPropertyList = await socket.call("retrieveFilterPropertyListbyType", "dataset", "galaxy_dataset");//working 
-            output = "";
-            for(let i=0; i<filterPropertyList.length; i++) {
-                    output += '<b>Name:</b> ' + filterPropertyList[i].get('name') + '<br>';
-                    output += '<b>Type:</b> ' + filterPropertyList[i].get('type') + '<br>';
-                    output += '<b>Doc:</b> '  + filterPropertyList[i].get('doc')  + '<br><br>';
-            }                
+            //output = "";
+            //for(let i=0; i<filterPropertyList.length; i++) {
+            //        output += '<b>Name:</b> ' + filterPropertyList[i].get('name') + '<br>';
+            //        output += '<b>Type:</b> ' + filterPropertyList[i].get('type') + '<br>';
+            //        output += '<b>Doc:</b> '  + filterPropertyList[i].get('doc')  + '<br><br>';
+            //}                
             document.getElementById("output").innerHTML = output; 
 
             pinStr = "";

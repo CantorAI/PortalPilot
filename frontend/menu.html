@@ -127,7 +127,29 @@
             function saveAndForward(json) {
                 // Send json data to server
             }
-            </script>
+
+            function openProject() {
+                // window.open("file:///"
+                // window.open("file://PCNAME/C$");
+                
+
+                // window.open("file://localhost/C$");
+                //window.open("file:///localhost:9089/");
+                
+                alert ("openProject is called");
+                //window.open("https://www.w3schools.com");
+                //window.open("test", "MsgWindow", "width=400,height=300");
+
+                var x = document.createElement("INPUT");
+                x.setAttribute("type", "file");
+                document.body.appendChild(x);
+            }            
+
+            function newProject() {
+                
+            }            
+
+        </script>
 
         <div class="navbar">
             <div style="flex: 0 0 auto;padding-top:0px;padding-left:5px;">
@@ -138,7 +160,7 @@
                 <i class="fa fa-caret-down"></i>
                 </button>
                 <div class="dropdown-content">
-                <a href="#" onclick="">Open</a>
+                <a href="#" onclick="openProject()">Open</a>
                 <a href="C:\Users\victor\projects\CantorAI\Galaxy\test\design\">New</a>
                 </div>
             </div> 
