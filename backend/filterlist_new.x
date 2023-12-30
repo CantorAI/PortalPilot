@@ -200,8 +200,10 @@ def retrieveProjects() : #when open project is clicked
 def createProject(projName): #when open project is clicked
     # projPath = galaxy_design_root + "/" + projName
 	# dir = fs.Dir(projPath)
-	dir = fs.Dir("../../Galaxy/design/project_traffic_a")
-	result = dir.createDir()
+
+	# dir = fs.Dir("../../Galaxy/design/project_traffic")
+	dir = fs.Dir(projName)
+	result = dir.createDir(0)
 	print (result)
 
 def retrievePipelines(projectPath):#when a project is selected
@@ -231,10 +233,12 @@ def savePipeline2File(pipelineJsonStr, filePath):
 	f = fs.File(filePath,openMode)
 	# f = fs.File("C:\\project\\CantorAI\\Galaxy\\test\\design\\project_a\\proj_a_pipeline1.pl", "w")
 	# f = fs.File("/C/project/CantorAI/Galaxy/test/design/project_a/proj_a_pipeline1.pl", "w")
+
+   	result = f.writeNew(pipelineJsonStr)
 	
 	if (f != None): 
 		print("file has been opened")
-    	result = f.write(pipelineJsonStr)
+    	result = f.writeNew(pipelineJsonStr)
 		if (result != true):
 			print("file write failed")	
 		else:
@@ -289,16 +293,13 @@ cantor.RegisterAPI('createPipeline',createPipeline)
 cantor.RegisterAPI('savePipeline2File',savePipeline2File)
 cantor.RegisterAPI('runPipeline',runPipeline) #obsolete
 # cantor.RegisterAPI('loadPipeline',loadPipeline)
-# -------------------------------------------------------------------- #
 
+# -------------------------------------------------------------------- #
 # section for unit test 
+# -------------------------------------------------------------------- #
 
 # savePipeline2File ("ABCD", "../../Galaxy/design/project_security/highway.pl")
 
-#print("------test createProject() -----")
-# print("--------------------")
-#projectName = "project_traffic"
-#bResult = createProject(projectName)
 
 '''
 print("------test createPipeline() -----")
@@ -308,7 +309,7 @@ createPipeline(mfilePath)
 
 print("------test retrievePipelines() -----")
 print("--------------------")
-projectPath += "C:\\project\\CantorAI\\Galaxy\\design\\project_security"
+projectPath += "../../Galaxy/design/project_security"
 pipelineList = retrievePipelines(projectPath) 
 print (pipelineList)
 
@@ -318,6 +319,11 @@ pipelineDetails = []
 pipelineFilePath = "../../Galaxy/design/project_security/highway.pl"
 pipelineDetails = retrievePipelineDetails(pipelineFilePath)
 print (pipelineDetails)
+
+print("------test createProject() -----")
+print("--------------------")
+projectName = "../../Galaxy/design/project_traffic"
+bResult = createProject(projectName)
 
 print("------test retrieveProjects() -----")
 print("--------------------")
