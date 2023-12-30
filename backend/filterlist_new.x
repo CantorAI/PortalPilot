@@ -3,10 +3,25 @@ from Galaxy import galaxy
 import yaml
 from xlang_os import fs
 
+# -------------------------------------------------------------------- #
 galaxy.cantor = cantor
 cantor.log('start of filterlist.x')
 
-myTab = '  '
+galaxy_root ="../../Galaxy"
+galaxy_design_root = galaxy_root+"/design"
+galaxy_config_path = galaxy_root+"/config/filters.yaml"
+
+# -------------------------------------------------------------------- #
+def readTextFile(filePath,openMode):
+  f = fs.File(filePath,openMode)
+  f_size = f.size
+  if f_size >=0:
+    data = f.read(f_size)
+  else:
+    data = ""
+  f.close() 
+  return data
+
 def convertYamltoJson(yamlData):
 	# jsonOutput = {}
 
@@ -53,80 +68,6 @@ def convertYamltoJson(yamlData):
 
 	# print(jsonOut)
 	return jsonOut
-
-def retrieveFilterList():
-	yamlData = yaml.load('C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\config\\filters.yaml') 
-	print('got yaml data')
-	print (yamlData.size)
-	# for key, value in data.items():
-	#	print(f'{key}: {value}')
-	jsonData = convertYamltoJson(yamlData)
-	return jsonData
-
-def retrieveFilterListRaw():
-	filePath = 'C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\config\\filters.yaml'
-	openMode = 'r'
-	f = fs.File(filePath,openMode)
-	f_size = f.size
-	if f_size >=0:
-		data = f.read(f_size)
-	else:
-		data = ''
-	f.close()
-	cantor.log(data)
-	return data
-
-def retrieveFilterPins(filterType, filterDll, pinType):
-	filterObj = galaxy.LoadFilter (filterType, filterDll)
-	# filterType = type(filterObj)
-	if (pinType == 1):
-		print("retrieve input Pins")
-		pins = filterObj.inputs
-	else: #'0'
-		print("retrieve output Pins")
-		pins = filterObj.outputs
-	print("number of pins: ", pins.size())
-	return pins #list
-	# return pins.size()
-
-def retrieveFilterDesignPage(fileterName, fileterURI):
-	filter = galaxy.LoadFilter (fileterName, fileterURI)
-	if (filter == 0):
-		return 0
-	designPage = filter.getFilterDesignPage()
-	return designPage
-
-def retrieveFilterPropertyList(filterObj):
-	filterType = type(filterObj)
-	propertyList = filterType.getMembers()
-	return propertyList
-
-def retrieveFilterPropertyListbyType(filterType, filterDll):
-	filterObj = galaxy.LoadFilter (filterType, filterDll)
-	filterType = type(filterObj)
-	propertyList = filterType.getMembers()
-	return propertyList
-
-# def retrieveFilterProperty(filterObj, propertyKey):
-#	propertyValue = filterObj.getMember(propertyKey)
-#	return propertyValue
-	
-def savePipeline2File(pipelineJsonStr, filePath):
-	# print(pipelineJsonStr)
-	print(filePath)
-
-	openMode = "w"
-	print(pipelineJsonStr)
-	f = fs.File(filePath,openMode)
-	# f = fs.File("C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\test\\design\\project_a\\proj_a_pipeline1.pl", "w")
-	# f = fs.File("/C/Users/victor/projects/CantorAI/Galaxy/test/design/project_a/proj_a_pipeline1.pl", "w")
-	if (f != None): 
-    	f.write(pipelineJsonStr)
-		f.close()
-		print("successfully opened the file")
-	else:
-		print("can not open the file")
-	# cantor.log(pipelineJsonStr)
 
 def json2X(pipelineJsonStr):
 	print("in json2X")
@@ -191,6 +132,118 @@ def json2X(pipelineJsonStr):
 	return gXData
 	#end of json2X
 
+def retrieveFilterList():
+	# yamlData = yaml.load('C:\\project\\CantorAI\\Galaxy\\config\\filters.yaml') 
+	yamlData = yaml.load(galaxy_config_path) 
+	print('got yaml data')
+	print (yamlData.size)
+	# for key, value in data.items():
+	#	print(f'{key}: {value}')
+	jsonData = convertYamltoJson(yamlData)
+	cantor.log(jsonData)
+	return jsonData
+
+
+def retrieveFilterListRaw():
+	# filePath = 'C:\\project\\CantorAI\\Galaxy\\config\\filters.yaml'
+	# data = readTextFile(filePath,"r");
+	data = readTextFile(galaxy_config_path,"r");	
+	cantor.log(data)
+	return data
+
+
+def retrieveFilterPins(filterType, filterDll, pinType):
+	filterObj = galaxy.LoadFilter (filterType, filterDll)
+	# filterType = type(filterObj)
+	if (pinType == 1):
+		print("retrieve input Pins")
+		pins = filterObj.inputs
+	else: #'0'
+		print("retrieve output Pins")
+		pins = filterObj.outputs
+	print("number of pins: ", pins.size())
+	return pins #list
+	# return pins.size()
+
+def retrieveFilterDesignPage(fileterName, fileterURI):
+	filter = galaxy.LoadFilter (fileterName, fileterURI)
+	if (filter == 0):
+		return 0
+	designPage = filter.getFilterDesignPage()
+	return designPage
+
+def retrieveFilterPropertyList(filterObj):
+	filterType = type(filterObj)
+	propertyList = filterType.getMembers()
+	return propertyList
+
+def retrieveFilterPropertyListbyType(filterType, filterDll):
+	filterObj = galaxy.LoadFilter (filterType, filterDll)
+	filterType = type(filterObj)
+	propertyList = filterType.getMembers()
+	return propertyList
+
+# def retrieveFilterProperty(filterObj, propertyKey):
+#	propertyValue = filterObj.getMember(propertyKey)
+#	return propertyValue
+
+def retrieveProjects() : #when open project is clicked
+	projList = []
+	projList += "C:\\project\\CantorAI\\Galaxy\\design\\project_a"
+	projList += "C:\\project\\CantorAI\\Galaxy\\design\\project_b"
+	projList += "C:\\project\\CantorAI\\Galaxy\\design\\project_c"
+	return projList
+
+def createProject(projName) :#when open project is clicked
+	if (projName != "") # search projName among existing projects
+		return True
+	else
+		return False
+
+def retrievePipelines(projectPath) :#when a project is selected
+	plList = []
+	plList += "b787.pl"
+	plList += "c919.pl"
+	return plList
+
+
+def retrievePipelineDetails(filePath):
+	# print(pipelineJsonStr)
+	print(filePath)
+
+	openMode = "w"
+	print(pipelineJsonStr)
+	f = fs.File(filePath,openMode)
+	# f = fs.File("C:\\project\\CantorAI\\Galaxy\\test\\design\\project_a\\proj_a_pipeline1.pl", "w")
+	# f = fs.File("/C/project/CantorAI/Galaxy/test/design/project_a/proj_a_pipeline1.pl", "w")
+	if (f != None): 
+    	f.write(pipelineJsonStr)
+		f.close()
+		print("successfully opened the file")
+	else:
+		print("can not open the file")
+	# cantor.log(pipelineJsonStr)
+
+def createPipeline():
+	print ("createPipeline")
+	
+def savePipeline2File(pipelineJsonStr, filePath):
+	# print(pipelineJsonStr)
+	print(filePath)
+
+	openMode = "w"
+	print(pipelineJsonStr)
+	f = fs.File(filePath,openMode)
+	# f = fs.File("C:\\project\\CantorAI\\Galaxy\\test\\design\\project_a\\proj_a_pipeline1.pl", "w")
+	# f = fs.File("/C/project/CantorAI/Galaxy/test/design/project_a/proj_a_pipeline1.pl", "w")
+	if (f != None): 
+    	f.write(pipelineJsonStr)
+		f.close()
+		print("successfully opened the file")
+	else:
+		print("can not open the file")
+	# cantor.log(pipelineJsonStr)
+
 
 def runPipeline_Old(pipelineJsonStr):
 	print("in runPipeline")
@@ -218,22 +271,58 @@ def runPipeline_Old(pipelineJsonStr):
 def runPipeline(fileName):
 	print("in runPipeline")
 	print("fileName- ", fileName)
-	#retVal = galaxy.LoadPipelineFromFile("C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\test\\design\\project_a\\proj_a_pipeline1.pl")
+	#retVal = galaxy.LoadPipelineFromFile("C:\\project\\CantorAI\\Galaxy\\test\\design\\project_a\\proj_a_pipeline1.pl")
 	retVal = galaxy.LoadPipelineFromFile(fileName) #call Galaxy factory 
 
+# -------------------------------------------------------------------- #
 cantor.RegisterAPI('retrieveFilterList',retrieveFilterList)
 cantor.RegisterAPI('retrieveFilterListRaw',retrieveFilterListRaw)
 cantor.RegisterAPI('retrieveFilterPins',retrieveFilterPins)
 cantor.RegisterAPI('retrieveFilterPropertyList',retrieveFilterPropertyList)
 cantor.RegisterAPI('retrieveFilterPropertyListbyType',retrieveFilterPropertyListbyType)
 # cantor.RegisterAPI('retrieveFilterProperty',retrieveFilterProperty)
+cantor.RegisterAPI('retrieveProjects',retrieveProjects)
+cantor.RegisterAPI('createProject',createProject)
+cantor.RegisterAPI('retrievePipelines',retrievePipelines)
+cantor.RegisterAPI('retrievePipelineDetails',retrievePipelineDetails)
+cantor.RegisterAPI('createPipeline',createPipeline)
 cantor.RegisterAPI('savePipeline2File',savePipeline2File)
 cantor.RegisterAPI('runPipeline',runPipeline) #obsolete
 # cantor.RegisterAPI('loadPipeline',loadPipeline)
-
-'''
+# -------------------------------------------------------------------- #
 
 # section for unit test 
+retrieveFilterList()
+'''
+
+print("------test retrieveProjects() -----")
+print("--------------------")
+projectList = retrieveProjects()
+print (projectList)
+
+print("------test retrievePipelines() -----")
+print("--------------------")
+projectPath += "C:\\project\\CantorAI\\Galaxy\\design\\project_b"
+pipelineList = retrievePipelines(projectPath) 
+print (pipelineList)
+
+print("------test retrievePipelineDetails() -----")
+print("--------------------")
+pipelineDetails = []
+pipelineFilePath = "C:\\project\\CantorAI\\Galaxy\\design\\project_b\\c919.pl"
+pipelineDetails = retrievePipelineDetails(pipelineFilePath):
+print (pipelineDetails)
+
+print("------test createProject() -----")
+print("--------------------")
+projectName = "C:\\project\\CantorAI\\Galaxy\\design\\project_j"
+bResult = createProject(projectName)
+projectName = "C:\\project\\CantorAI\\Galaxy\\design\\project_b"
+bResult = createProject(projectName)
+print (bResult)
+
+
+
 print("------get pin size unit test section -----")
 print("--------------------")
 filterType = "dataset"

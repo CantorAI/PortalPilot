@@ -55,7 +55,7 @@ def convertYamltoJson(yamlData):
 	return jsonOut
 
 def retrieveFilterList():
-	yamlData = yaml.load('C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\config\\filters.yaml') 
+	yamlData = yaml.load('C:\\project\\CantorAI\\Galaxy\\config\\filters.yaml') 
 	print('got yaml data')
 	print (yamlData.size)
 	# for key, value in data.items():
@@ -64,7 +64,7 @@ def retrieveFilterList():
 	return jsonData
 
 def retrieveFilterListRaw():
-	filePath = 'C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\config\\filters.yaml'
+	filePath = 'C:\\project\\CantorAI\\Galaxy\\config\\filters.yaml'
 	openMode = 'r'
 	f = fs.File(filePath,openMode)
 	f_size = f.size
