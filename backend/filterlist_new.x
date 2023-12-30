@@ -22,6 +22,11 @@ def readTextFile(filePath,openMode):
   f.close() 
   return data
 
+def createTextFile(filePath,openMode):
+  f = fs.File(filePath,openMode)
+  f.close() 
+  return true
+
 def convertYamltoJson(yamlData):
 	# jsonOutput = {}
 
@@ -188,58 +193,56 @@ def retrieveFilterPropertyListbyType(filterType, filterDll):
 def retrieveProjects() : #when open project is clicked
 	projList = []
 	dir = fs.Dir(galaxy_design_root)
-	projList = dir.scanDir()
-	print (projList)
-
+	projList = dir.scanDir(0) #0 subDir only
+	# print (projList)
 	return projList
 
-def createProject(projName) :#when open project is clicked
-	if (projName != "") # search projName among existing projects
-		return True
-	else
-		return False
+def createProject(projName): #when open project is clicked
+    # projPath = galaxy_design_root + "/" + projName
+	# dir = fs.Dir(projPath)
+	dir = fs.Dir("../../Galaxy/design/project_traffic_a")
+	result = dir.createDir()
+	print (result)
 
-def retrievePipelines(projectPath) :#when a project is selected
+def retrievePipelines(projectPath):#when a project is selected
+	# dir = fs.Dir(projectPath)
+	dir = fs.Dir("../../Galaxy/design/project_security")
 	plList = []
-	plList += "b787.pl"
-	plList += "c919.pl"
+	plList = dir.scanDir(1) #file only
 	return plList
 
 def retrievePipelineDetails(filePath):
-	# print(pipelineJsonStr)
+	data = readTextFile(filePath,"r");	
+	cantor.log(data)
+	return data
+
+def createPipeline(filePath):
+	# filePath = "../../Galaxy/design/project_security/apartment_complex.pl" 
+	createTextFile(filePath, "w")
+
+def savePipeline2FileTest(pipelineJsonStr, filePath):
 	print(filePath)
+	createTextFile(filePath, "w")
 
-	openMode = "w"
-	print(pipelineJsonStr)
-	f = fs.File(filePath,openMode)
-	# f = fs.File("C:\\project\\CantorAI\\Galaxy\\test\\design\\project_a\\proj_a_pipeline1.pl", "w")
-	# f = fs.File("/C/project/CantorAI/Galaxy/test/design/project_a/proj_a_pipeline1.pl", "w")
-	if (f != None): 
-    	f.write(pipelineJsonStr)
-		f.close()
-		print("successfully opened the file")
-	else:
-		print("can not open the file")
-	# cantor.log(pipelineJsonStr)
-
-def createPipeline():
-	print ("createPipeline")
-	
 def savePipeline2File(pipelineJsonStr, filePath):
-	# print(pipelineJsonStr)
 	print(filePath)
-
-	openMode = "w"
 	print(pipelineJsonStr)
+	openMode = "w"
 	f = fs.File(filePath,openMode)
 	# f = fs.File("C:\\project\\CantorAI\\Galaxy\\test\\design\\project_a\\proj_a_pipeline1.pl", "w")
 	# f = fs.File("/C/project/CantorAI/Galaxy/test/design/project_a/proj_a_pipeline1.pl", "w")
+	
 	if (f != None): 
-    	f.write(pipelineJsonStr)
-		f.close()
-		print("successfully opened the file")
+		print("file has been opened")
+    	result = f.write(pipelineJsonStr)
+		if (result != true):
+			print("file write failed")	
+		else:
+			print("successfully writed data to the file")
 	else:
 		print("can not open the file")
+	
+	f.close()
 	# cantor.log(pipelineJsonStr)
 
 def runPipeline_Old(pipelineJsonStr):
@@ -290,34 +293,36 @@ cantor.RegisterAPI('runPipeline',runPipeline) #obsolete
 
 # section for unit test 
 
-print("------test retrieveProjects() -----")
-print("--------------------")
-projectList = retrieveProjects()
-print (projectList)
+# savePipeline2File ("ABCD", "../../Galaxy/design/project_security/highway.pl")
+
+#print("------test createProject() -----")
+# print("--------------------")
+#projectName = "project_traffic"
+#bResult = createProject(projectName)
 
 '''
+print("------test createPipeline() -----")
+print("--------------------")
+mfilePath = "../../Galaxy/design/project_security/apartment_complex.pl" 
+createPipeline(mfilePath)
+
 print("------test retrievePipelines() -----")
 print("--------------------")
-projectPath += "C:\\project\\CantorAI\\Galaxy\\design\\project_b"
+projectPath += "C:\\project\\CantorAI\\Galaxy\\design\\project_security"
 pipelineList = retrievePipelines(projectPath) 
 print (pipelineList)
 
 print("------test retrievePipelineDetails() -----")
 print("--------------------")
 pipelineDetails = []
-pipelineFilePath = "C:\\project\\CantorAI\\Galaxy\\design\\project_b\\c919.pl"
-pipelineDetails = retrievePipelineDetails(pipelineFilePath):
+pipelineFilePath = "../../Galaxy/design/project_security/highway.pl"
+pipelineDetails = retrievePipelineDetails(pipelineFilePath)
 print (pipelineDetails)
 
-print("------test createProject() -----")
+print("------test retrieveProjects() -----")
 print("--------------------")
-projectName = "C:\\project\\CantorAI\\Galaxy\\design\\project_j"
-bResult = createProject(projectName)
-projectName = "C:\\project\\CantorAI\\Galaxy\\design\\project_b"
-bResult = createProject(projectName)
-print (bResult)
-
-
+projectList = retrieveProjects()
+print (projectList)
 
 print("------get pin size unit test section -----")
 print("--------------------")
