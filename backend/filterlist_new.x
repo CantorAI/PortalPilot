@@ -143,14 +143,12 @@ def retrieveFilterList():
 	cantor.log(jsonData)
 	return jsonData
 
-
 def retrieveFilterListRaw():
 	# filePath = 'C:\\project\\CantorAI\\Galaxy\\config\\filters.yaml'
 	# data = readTextFile(filePath,"r");
 	data = readTextFile(galaxy_config_path,"r");	
 	cantor.log(data)
 	return data
-
 
 def retrieveFilterPins(filterType, filterDll, pinType):
 	filterObj = galaxy.LoadFilter (filterType, filterDll)
@@ -189,9 +187,10 @@ def retrieveFilterPropertyListbyType(filterType, filterDll):
 
 def retrieveProjects() : #when open project is clicked
 	projList = []
-	projList += "C:\\project\\CantorAI\\Galaxy\\design\\project_a"
-	projList += "C:\\project\\CantorAI\\Galaxy\\design\\project_b"
-	projList += "C:\\project\\CantorAI\\Galaxy\\design\\project_c"
+	dir = fs.Dir(galaxy_design_root)
+	projList = dir.scanDir()
+	print (projList)
+
 	return projList
 
 def createProject(projName) :#when open project is clicked
@@ -205,7 +204,6 @@ def retrievePipelines(projectPath) :#when a project is selected
 	plList += "b787.pl"
 	plList += "c919.pl"
 	return plList
-
 
 def retrievePipelineDetails(filePath):
 	# print(pipelineJsonStr)
@@ -243,7 +241,6 @@ def savePipeline2File(pipelineJsonStr, filePath):
 	else:
 		print("can not open the file")
 	# cantor.log(pipelineJsonStr)
-
 
 def runPipeline_Old(pipelineJsonStr):
 	print("in runPipeline")
@@ -292,14 +289,13 @@ cantor.RegisterAPI('runPipeline',runPipeline) #obsolete
 # -------------------------------------------------------------------- #
 
 # section for unit test 
-retrieveFilterList()
-'''
 
 print("------test retrieveProjects() -----")
 print("--------------------")
 projectList = retrieveProjects()
 print (projectList)
 
+'''
 print("------test retrievePipelines() -----")
 print("--------------------")
 projectPath += "C:\\project\\CantorAI\\Galaxy\\design\\project_b"
