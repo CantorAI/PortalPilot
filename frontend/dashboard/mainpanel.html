@@ -19,10 +19,6 @@
           min-height: 300px;
         }
     </style>
-    <!--
-    <script src="/c/users/victor/projects/CantorAI/Galaxy/Javascript/parse_dataframe.js"></script>
-    <script src="/c/users/victor/projects/CantorAI/Galaxy/Javascript/draw.js"></script>
-    <script src="/c/users/victor/projects/CantorAI/Cantor/src/WebEngine/cantor.ws.js"></script>
     -->
     <script>
         function selectPipeline(){
@@ -63,7 +59,7 @@
         async function savePipeline(fileName){ // will be replaced auto save which returns the file name
             jsonObjNode = mgr.save();
             document.getElementById('output').innerHTML += jsonObjNode;          
-            //let retVal = await socket.call("savePipeline2File", jsonObjNode, "C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\test\\design\\project_a\\proj_a_pipeline1.pl");
+            //let retVal = await socket.call("savePipeline2File", jsonObjNode, "../../Galaxy/design/project_Honda/Civic.pl");
             let retVal = await socket.call("savePipeline2File", jsonObjNode, fileName);
             if (retVal == null ) {
                 return;
@@ -110,8 +106,8 @@
             <button disabled onclick="mgr.save()">Save</button> 
             <button disabled onclick="runPipeline()">Run</button>
             -->
-            <button onclick="savePipeline('C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\test\\design\\project_a\\proj_a_pipeline1.pl')">Save</button> 
-            <button onclick="runPipeline('C:\\Users\\victor\\projects\\CantorAI\\Galaxy\\test\\design\\project_a\\proj_a_pipeline1.pl')">Run</button>
+            <button onclick="savePipeline('../../Galaxy/design/project_Honda/Civic.pl')">Save</button> 
+            <button onclick="runPipeline('../../Galaxy/design/project_Honda/Civic.pl')">Run</button>
         </div>       
         <!--
         <cantor-panel style="flex: 1 1 auto;
