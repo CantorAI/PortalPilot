@@ -12,7 +12,8 @@ galaxy_design_root = galaxy_root+"/design"
 galaxy_config_path = galaxy_root+"/config/filters.yaml"
 
 # -------------------------------------------------------------------- #
-def readTextFile(filePath,openMode):
+def readTextFile(filePath):
+  openMode = "r"
   f = fs.File(filePath,openMode)
   f_size = f.size
   if f_size >=0:
@@ -22,10 +23,15 @@ def readTextFile(filePath,openMode):
   f.close() 
   return data
 
+def writeTextFile(filePath, data):
+  openMode = "w"
+  f = fs.File(filePath,openMode)
+  result = f.write(data)
+  return result
+
 def createTextFile(filePath,openMode):
   f = fs.File(filePath,openMode)
   f.close() 
-  return true
 
 def convertYamltoJson(yamlData):
 	# jsonOutput = {}
@@ -150,8 +156,8 @@ def retrieveFilterList():
 
 def retrieveFilterListRaw():
 	# filePath = 'C:\\project\\CantorAI\\Galaxy\\config\\filters.yaml'
-	# data = readTextFile(filePath,"r");
-	data = readTextFile(galaxy_config_path,"r");	
+	# data = readTextFile(filePath);
+	data = readTextFile(galaxy_config_path);	
 	cantor.log(data)
 	return data
 
@@ -214,7 +220,7 @@ def retrievePipelines(projectPath):#when a project is selected
 	return plList
 
 def retrievePipelineDetails(filePath):
-	data = readTextFile(filePath,"r");	
+	data = readTextFile(filePath)
 	cantor.log(data)
 	return data
 
@@ -222,32 +228,10 @@ def createPipeline(filePath):
 	# filePath = "../../Galaxy/design/project_security/apartment_complex.pl" 
 	createTextFile(filePath, "w")
 
-def savePipeline2FileTest(pipelineJsonStr, filePath):
-	print(filePath)
-	createTextFile(filePath, "w")
-
 def savePipeline2File(pipelineJsonStr, filePath):
 	print(filePath)
-	print(pipelineJsonStr)
-	openMode = "w"
-	f = fs.File(filePath,openMode)
-	# f = fs.File("C:\\project\\CantorAI\\Galaxy\\test\\design\\project_a\\proj_a_pipeline1.pl", "w")
-	# f = fs.File("/C/project/CantorAI/Galaxy/test/design/project_a/proj_a_pipeline1.pl", "w")
-
-   	result = f.writeNew(pipelineJsonStr)
-	
-	if (f != None): 
-		print("file has been opened")
-    	result = f.writeNew(pipelineJsonStr)
-		if (result != true):
-			print("file write failed")	
-		else:
-			print("successfully writed data to the file")
-	else:
-		print("can not open the file")
-	
-	f.close()
-	# cantor.log(pipelineJsonStr)
+	createTextFile(filePath, "w")
+	writeTextFile(filePath, pipelineJsonStr)
 
 def runPipeline_Old(pipelineJsonStr):
 	print("in runPipeline")
@@ -298,7 +282,7 @@ cantor.RegisterAPI('runPipeline',runPipeline) #obsolete
 # section for unit test 
 # -------------------------------------------------------------------- #
 
-# savePipeline2File ("ABCD", "../../Galaxy/design/project_security/highway.pl")
+# savePipeline2File ("ABCD， hello world", "../../Galaxy/design/project_security/highway.pl")
 
 
 '''
@@ -412,9 +396,7 @@ dataset = galaxy.LoadFilter ('dataset', 'galaxy_dataset')
 fermat = galaxy.LoadFilter('fermat','galaxy_fermat')
 promptFilter = galaxy.LoadFilter('prompt','galaxy_llmAgent')
 llmAgentFilter = galaxy.LoadFilter('llmAgent','galaxy_llmAgent')
-'''
 
-'''
 retrieveFilterListRaw()
 retrieveFilterList()
 retrieveFilterPropertyList(dataset)
