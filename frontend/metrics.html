@@ -1,0 +1,384 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Pane Splitter with Expand/Collapse</title>
+    <script type="text/javascript" src="lib/dygraphs/dygraph.js"></script>
+    <script type="text/javascript" src="lib/dygraphs/extras/crosshair.js"></script>
+    <link rel="stylesheet" type="text/css" href="lib/dygraphs/dygraph.css" />
+    <script src="scripts/cantorJs.js"></script>
+    <script src="scripts/metrics_block.js"></script>
+    <script src="scripts/api.js"></script>
+    <link rel="stylesheet" href="./styles/syntax.css">
+    <style>
+        .container {
+            display: flex;
+			 overflow: hidden;
+        }
+
+        .pane {
+            padding: 0px;
+      
+            
+        }
+
+        .left {
+            border-right: 2px solid #ddd;
+        }
+
+        .category {
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .grid-cell {
+            border: 1px solid #ddd;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: black;
+        }
+		.my-div {
+        width: 1700px; /* 指定 div 的宽度 */
+        height: 1150px; /* 指定 div 的高度 */
+        border: 0px solid black; /* 添加边框效果 */
+        overflow: auto; /* 设置为自动滚动（根据内容）*/
+    }
+	li::marker {
+        content: '';
+    }
+	body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: black;
+  color:white;
+}
+    </style>
+</head>
+<body style="overflow: hidden;backgroud-color:black">
+
+    <div class="container" >
+		
+        <div class="pane left">
+			<table>
+				<tr><td>
+			
+				<ul id="hostList">
+                <!-- Two-Level List will be added here -->
+            </ul>
+			
+			</td></tr>
+
+			<tr><td>
+            <input type="text" id="searchBox" placeholder="Search metrics...">
+            <ul id="itemList">
+                <!-- Two-Level List will be added here -->
+            </ul>
+			</td>
+			</table>
+        </div>
+
+        <div class="my-div" >
+            <div class="grid" id="grid">
+                <!-- 2x2 Grid cells will be added here -->
+            </div>
+        </div>
+    </div>
+    <script>
+	function getHostSeleted(){
+			var checkedList=[];	
+			var arr = document.getElementsByName("mHost");
+			for(var i=0;i<arr.length;i++){
+				if(arr[i].checked){
+					checkedList.push(arr[i].value);
+				}
+			}
+
+			/*var selectElement = document.getElementById("host");
+			var selectedValue = selectElement.options[selectElement.selectedIndex].value;
+			return selectedValue;*/
+			return checkedList;
+		}
+	function loadMetric(cell,data,flag){
+					let initSrc="";
+					for (var i = 0; i < cell.children.length; i++) {
+							var child = cell.children[i];
+							if(child.nodeName === "INPUT") {
+								initSrc=child.value;
+							}
+
+					}
+					// delete all el
+					while (cell.firstChild) {
+						cell.removeChild(cell.firstChild);
+					}
+
+					var metrics1 = document.createElement("metrics-block");
+					let srcList=[];
+					if(initSrc != ""){
+						 srcList = initSrc.split(",");
+					}
+					var hosts=[];
+					hosts = getHostSeleted();
+					if(flag==="1"){
+						for(var p=0;p<hosts.length;p++){
+							srcList.push(data+":"+hosts[p]);
+						}
+					}else{
+						for(var k=0;k<srcList.length;k++){
+							if(srcList[k] === data){
+								 srcList.splice(k,1);
+								 break;
+								}
+						}
+						
+					}
+					console.log(getHostSeleted());
+
+					var newInput = document.createElement("input");  
+					newInput.type="text"; 
+					newInput.style.display="none";
+					newInput.value=srcList.join(","); 
+					cell.appendChild(newInput);
+
+					// add del mark
+					var tbl = document.createElement("table");  
+					for(let i=0;i<srcList.length;i++){
+						var tr = document.createElement("tr");  
+						var td = document.createElement("td");  
+						var span = document.createElement("span");  
+						span.innerText =srcList[i]+"×";
+						span.style="cursor: pointer;color:white";
+						span.onclick = function () {
+							span.style.display="none";
+							// refresh
+							console.log(this.innerText);
+							loadMetric(cell,this.innerText.replace("×",""),"0");
+
+						}
+						td.appendChild(span);
+						tr.appendChild(td);
+						tbl.appendChild(tr);
+						cell.appendChild(tbl);
+					}
+
+					//metrics1.setAttribute("id","metric1");
+					metrics1.setAttribute("src",srcList.join(","));
+				//	metrics1.setAttribute("host",getHostSeleted());
+					metrics1.style.width="550px";
+					metrics1.style.height="400px";
+					cell.appendChild(metrics1);
+                   // this.textContent = metrics1;
+	}
+	init();
+       function init() {
+            const categories = {
+                "Cantor General": ["GPU", "CPU", "CantorCPU", "Memory","ThreadCount"],
+                "Cantor Scheduling": ["TaskCount", "WaitTaskCount", "ObjCount"],
+				"Factory": ["PinQuey_FPS"],
+				"Dataset": ["Dataset_Ouput_FPS"],
+				"Fermat": ["Fermat_Output_FPS"],
+				"Tee": ["Tee_FPS"],
+				"Health": ["Health_Pulse"],
+                // ... Add more categories as needed
+            };
+			const hosts={"host": ["localhost","123.456.789.12","123.456.789.13","123.456.789.14"]};
+
+            const itemList = document.getElementById('itemList');
+			const hostList = document.getElementById('hostList');
+            const searchBox = document.getElementById('searchBox');
+            const grid = document.getElementById('grid');
+
+			function createHost(name, items) {
+                let host = document.createElement('li');
+                host.className = 'category';
+                host.innerHTML = `<span class="toggle">+</span> ${name}`;
+                host.addEventListener('click', function () {
+                    this.querySelector('.toggle').textContent =
+                        this.nextSibling.classList.contains('hidden') ? '-' : '+';
+                    this.nextSibling.classList.toggle('hidden');
+              });
+				let subList = document.createElement('ul');
+              //  subList.className = 'hidden';
+                items.forEach(item => {
+                    let listItem = document.createElement('li');
+					let span = document.createElement('span');
+					span.innerText=item;
+                    //listItem.textContent = item;
+                    let chk = document.createElement('input');
+					chk.type="checkbox";
+					chk.innerText=item;
+					chk.value=item;
+					chk.name="mHost";
+					listItem.appendChild(chk);
+					listItem.appendChild(span);
+                    subList.appendChild(listItem);
+                });
+
+                hostList.appendChild(host);
+                hostList.appendChild(subList);
+
+				}
+
+            function createCategory(name, items) {
+                let category = document.createElement('li');
+                category.className = 'category';
+                category.innerHTML = `<span class="toggle">+</span> ${name}`;
+                category.addEventListener('click', function () {
+                    this.querySelector('.toggle').textContent =
+                        this.nextSibling.classList.contains('hidden') ? '-' : '+';
+                    this.nextSibling.classList.toggle('hidden');
+                });
+
+                let subList = document.createElement('ul');
+                subList.className = 'hidden';
+                items.forEach(item => {
+                    let listItem = document.createElement('li');
+                    listItem.textContent = item;
+                    listItem.draggable = true;
+                    listItem.addEventListener('dragstart', function (event) {
+                        event.dataTransfer.setData("text", event.target.textContent);
+                    });
+                    subList.appendChild(listItem);
+                });
+
+                itemList.appendChild(category);
+                itemList.appendChild(subList);
+            }
+
+			for (let host in hosts) {
+                createHost(host, hosts[host]);
+            }
+
+            for (let category in categories) {
+                createCategory(category, categories[category]);
+            }
+
+            // Create 2x2 grid cells
+            for (let i = 0; i < 10; i++) {
+                let cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.addEventListener('dragover', function (event) {
+                    event.preventDefault();
+                });
+                cell.addEventListener('drop', function (event) {
+                    event.preventDefault();
+                    let data = event.dataTransfer.getData("text");
+					console.log(getHostSeleted() );
+					if(getHostSeleted().length ===0){
+						alert("please choose host");
+						return;
+					}
+					loadMetric(cell,data,"1");
+					/*
+					let initSrc="";
+					for (var i = 0; i < cell.children.length; i++) {
+							var child = cell.children[i];
+							if(child.nodeName === "INPUT") {
+								initSrc=child.value;
+							}
+
+					}
+					// delete all el
+					while (cell.firstChild) {
+						cell.removeChild(cell.firstChild);
+					}
+
+					var metrics1 = document.createElement("metrics-block");
+					let srcList=[];
+					if(initSrc != ""){
+						 srcList = initSrc.split(",");
+					}
+					srcList.push(data);
+					console.log(getHostSeleted());
+
+					var newInput = document.createElement("input");  
+					newInput.type="text"; 
+					newInput.style.display="none";
+					newInput.value=srcList.join(","); 
+					cell.appendChild(newInput);
+
+					// add del mark
+					var tbl = document.createElement("table");  
+					for(let i=0;i<srcList.length;i++){
+						var tr = document.createElement("tr");  
+						var td = document.createElement("td");  
+						var span = document.createElement("span");  
+						span.innerText =srcList[i]+"×";
+						span.style="cursor: pointer;";
+						span.onclick = function () {
+							span.style.display="none";
+							// refresh
+							console.log(this.innerText);
+							var srcInput = newInput.value.replace(this.innerText.replace("×",""),"");
+							console.log(srcInput);
+							let newSrcList_=[];
+							let newSrcList=[];
+							newSrcList_= srcInput.split(",");
+							for(var j=0;j<newSrcList_.length;j++){
+								newSrcList.push(newSrcList_[j]);
+							}
+							newInput.value=newSrcList.join(",");
+							
+							// remove metrics
+							var cellParentEl = tbl.parentElement;
+							for (var i = 0; i < cellParentEl.children.length; i++) {
+								var child = cellParentEl.children[i];
+								console.log(child.nodeName);
+								if(child.nodeName === "METRICS-BLOCK") {
+											cellParentEl.removeChild(child);
+								}
+							}
+							
+							// add new metrics
+							var metrics2 = document.createElement("metrics-block");
+							metrics2.setAttribute("src",newSrcList.join(","));
+							metrics2.setAttribute("host",getHostSeleted());
+							metrics2.style.width="550px";
+							metrics2.style.height="400px";
+							cell.appendChild(metrics2);
+							
+							//td.removeChild(span);
+
+						}
+						td.appendChild(span);
+						tr.appendChild(td);
+						tbl.appendChild(tr);
+						cell.appendChild(tbl);
+						
+					}
+
+					//metrics1.setAttribute("id","metric1");
+					metrics1.setAttribute("src",srcList.join(","));
+					metrics1.setAttribute("host",getHostSeleted());
+					metrics1.style.width="550px";
+					metrics1.style.height="400px";
+					cell.appendChild(metrics1);
+                   // this.textContent = metrics1;
+				  */
+                });
+                grid.appendChild(cell);
+            }
+
+            searchBox.addEventListener('input', function () {
+                let filter = this.value.toUpperCase();
+                itemList.querySelectorAll('.category').forEach(function (category) {
+                    let text = category.textContent;
+                    category.style.display = text.toUpperCase().includes(filter) ? "" : "none";
+                    if (!category.nextSibling.classList.contains('hidden')) {
+                        category.nextSibling.style.display = text.toUpperCase().includes(filter) ? "" : "none";
+                    }
+                });
+            });
+        };
+    </script>
+</body>
+</html>
