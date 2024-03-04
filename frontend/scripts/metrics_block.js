@@ -116,11 +116,11 @@ class MetricsBlock extends HTMLElement {
           <div class="graph"></div>
           <div class="legend-container"></div>
           <div style="left:20px;">
-            Zoom: click-drag
-            Pan: shift-click-drag
-            Restore zoom level: double-click
           </div>
         `;
+            //Zoom: click-drag //dhq 20240304
+            //Pan: shift-click-drag
+            //Restore zoom level: double-click
     }
     connectedCallback() {
         const graphDiv = this.shadowRoot.querySelector('.graph');

@@ -84,6 +84,11 @@
             </ul>
 			</td>
 			</table>
+			<div>
+				Zoom: click-drag<br/>
+				Pan: shift-click-drag<br/>
+				Restore zoom level: double-click
+			</div>
         </div>
 
         <div class="my-div" >
@@ -167,8 +172,9 @@
 						td.appendChild(span);
 						tr.appendChild(td);
 						tbl.appendChild(tr);
-						cell.appendChild(tbl);
+						//cell.appendChild(tbl);//dhq 20240304
 					}
+					metrics1.shadowRoot.children[3].appendChild(tbl);//dhq 20240304
 
 					//metrics1.setAttribute("id","metric1");
 					metrics1.setAttribute("src",srcList.join(","));
