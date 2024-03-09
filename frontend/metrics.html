@@ -155,9 +155,12 @@
 					cell.appendChild(newInput);
 
 					// add del mark
-					var tbl = document.createElement("table");  
-					for(let i=0;i<srcList.length;i++){
-						var tr = document.createElement("tr");  
+					var tr=null,tbl = document.createElement("table");  
+					for (let i = 0; i < srcList.length; i++){
+                        if (i % 3 == 0) {//dhq 20240307
+							tr = document.createElement("tr");
+							tbl.appendChild(tr);
+						}
 						var td = document.createElement("td");  
 						var span = document.createElement("span");  
 						span.innerText =srcList[i]+"×";
@@ -171,7 +174,7 @@
 						}
 						td.appendChild(span);
 						tr.appendChild(td);
-						tbl.appendChild(tr);
+						//tbl.appendChild(tr);//dhq 20240307
 						//cell.appendChild(tbl);//dhq 20240304
 					}
 					metrics1.shadowRoot.children[3].appendChild(tbl);//dhq 20240304
