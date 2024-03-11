@@ -10463,7 +10463,7 @@ Legend.prototype.select = function (e) {
     this.legend_div_.style.display = 'none';
     return;
   }
-  var html = Legend.generateLegendHTML(e.dygraph, xValue, points, this.one_em_width_, row);
+    var html = Legend.generateLegendHTML(e.dygraph, xValue, points, this.one_em_width_, row);
   if (html instanceof Node && html.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
     this.legend_div_.innerHTML = '';
     this.legend_div_.appendChild(html);
@@ -10507,8 +10507,53 @@ Legend.prototype.select = function (e) {
     var labelsDivWidth = this.legend_div_.offsetWidth;
     this.legend_div_.style.left = area.x + area.w - labelsDivWidth - 1 + "px";
     this.legend_div_.style.top = area.y + "px";
-  }
+    }
+    this.selectOne(html, points);//20240311 dhq 移动标签
 };
+    Legend.prototype.selectOne = function (html, points) {//20240311 dhq 移动标签
+        var getMousePosDis = function (x1,y1) {//https://www.cnblogs.com/scottjeremy/p/6972644.html
+            var e = window.event;
+            console.log("e: " + e);
+            if (!e)
+                return 0;
+            var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
+            var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
+            var x = e.pageX || e.clientX + scrollX;
+            var y = e.pageY || e.clientY + scrollY;
+            if (isNaN(x) || isNaN(y) || isNaN(x1) || isNaN(y1))
+                return -1;
+            var d = Math.sqrt(Math.pow(x1 - x, 2) + Math.pow(y1 - y, 2));
+            //alert('x: ' + x + '\ny: ' + y);
+            return d;
+        }
+        var dis=-1,val=0,ss="";
+        for (var i = 0; i < points.length;i++) {
+            var x = points[i].canvasx, y = points[i].canvasy, yval = points[i].yval, name = points[i].name;
+            // 创建一个新的Date对象并传入时间戳作为参数
+            var dateObj = new Date(points[i].xval);
+            // 格式化输出日期和时间
+            var year = dateObj.getFullYear();
+            var month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+            var day = dateObj.getDate().toString().padStart(2, '0');
+            var hours = dateObj.getHours().toString().padStart(2, '0');
+            var minutes = dateObj.getMinutes().toString().padStart(2, '0');
+            var seconds = dateObj.getSeconds().toString().padStart(2, '0');
+            //console.log("t:"+dateObj);
+            x -= this.legend_div_.offsetLeft;
+            y -= this.legend_div_.offsetTop;
+            var d = getMousePosDis(x, y);
+            if (d >= 0 && (dis >= d || dis == -1)) {
+                dis = d;
+                ss = 'position:absolute;left:' + x + 'px;top:' + y + 'px';
+                val = name + "-" + hours + ":" + minutes + ":" + seconds + "-" + yval.toFixed(2);
+                console.log(i + " " + name + " " + val + " " + ss + " x:" + this.legend_div_.offsetLeft + " y:" + this.legend_div_.style.top);
+            }
+        }
+        var obj = document.createElement('div');
+        obj.setAttribute('style', ss);
+        obj.innerHTML = val;
+        this.legend_div_.appendChild(obj);
+    };
 Legend.prototype.deselect = function (e) {
   var legendMode = e.dygraph.getOption('legend');
   if (legendMode !== 'always') {
