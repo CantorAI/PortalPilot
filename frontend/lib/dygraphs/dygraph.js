@@ -10512,8 +10512,8 @@ Legend.prototype.select = function (e) {
 };
     Legend.prototype.selectOne = function (html, points) {//20240311 dhq 移动标签
         var getMousePosDis = function (x1,y1) {//https://www.cnblogs.com/scottjeremy/p/6972644.html
-            var e = window.event;
-            console.log("e: " + e);
+            var e = window_event;
+            //console.log("e: " + e);
             if (!e)
                 return 0;
             var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;

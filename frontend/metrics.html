@@ -125,6 +125,12 @@
         </div>
     </div>
     <script>
+		document.addEventListener('mousemove', function (event) {
+			window_event = event;
+            var x = event.clientX;
+            var y = event.clientY;
+            //console.log('鼠标位置：', x, y);
+        });
 		function dosize() {
             var w = document.documentElement.clientWidth, h = parseInt(document.documentElement.clientHeight) - 10;
             var obj = document.getElementById("paneleft");
