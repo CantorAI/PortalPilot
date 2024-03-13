@@ -1,73 +1,87 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>Pane Splitter with Expand/Collapse</title>
-    <script type="text/javascript" src="lib/dygraphs/dygraph.js"></script>
-    <script type="text/javascript" src="lib/dygraphs/extras/crosshair.js"></script>
-    <link rel="stylesheet" type="text/css" href="lib/dygraphs/dygraph.css" />
-    <script src="scripts/cantorJs.js"></script>
-    <script src="scripts/metrics_block.js"></script>
-    <script src="scripts/api.js"></script>
-    <link rel="stylesheet" href="./styles/syntax.css">
-    <style>
-        .container {
-            display: flex;
-			 overflow: hidden;
-        }
+	<title>Pane Splitter with Expand/Collapse</title>
+	<script type="text/javascript" src="lib/dygraphs/dygraph.js"></script>
+	<script type="text/javascript" src="lib/dygraphs/extras/crosshair.js"></script>
+	<link rel="stylesheet" type="text/css" href="lib/dygraphs/dygraph.css" />
+	<script src="scripts/cantorJs.js"></script>
+	<script src="scripts/metrics_block.js"></script>
+	<script src="scripts/api.js"></script>
+	<link rel="stylesheet" href="./styles/syntax.css">
+	<style>
+		.container {
+			display: flex;
+			overflow: hidden;
+		}
 
-        .pane {
-            padding: 0px;
-      
-            
-        }
+		.pane {
+			padding: 0px;
+		}
 
         .left {
             border-right: 2px solid #ddd;
+            overflow: auto;
+            min-width: 250px;
         }
 
-        .category {
-            cursor: pointer;
-        }
+		.category {
+			cursor: pointer;
+		}
 
-        .hidden {
-            display: none;
-        }
+		.hidden {
+			display: none;
+		}
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
+		.grid {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 10px;
+		}
 
-        .grid-cell {
-            border: 1px solid #ddd;
-            height: 400px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: black;
-        }
+		.grid-cell {
+			border: 1px solid #ddd;
+			height: 400px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-color: black;
+		}
+
 		.my-div {
-        width: 1700px; /* 指定 div 的宽度 */
-        height: 1150px; /* 指定 div 的高度 */
-        border: 0px solid black; /* 添加边框效果 */
-        overflow: auto; /* 设置为自动滚动（根据内容）*/
-    }
-	li::marker {
-        content: '';
-    }
-	body {
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: black;
-  color:white;
-}
-    </style>
+			width: 1700px; /* 指定 div 的宽度 */
+			height: 1150px; /* 指定 div 的高度 */
+			border: 0px solid black; /* 添加边框效果 */
+			overflow: auto; /* 设置为自动滚动（根据内容）*/
+		}
+
+		li::marker {
+			content: '';
+		}
+
+		body {
+			font-family: Arial, Helvetica, sans-serif;
+			background-color: black;
+			color: white;
+		}
+
+        /* Webkit 浏览器 滚动条样式*/
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 5px;
+        }
+	</style>
 </head>
 <body style="overflow: hidden;backgroud-color:black">
 
     <div class="container" >
-		
-        <div class="pane left">
+		<div id="paneleft" class="pane left">
 			<table>
 				<tr>
 					<td>
@@ -82,7 +96,9 @@
 				<tr>
 					<td>
 						<div style="border:2px solid gray">
-							<input type="text" id="searchBox" placeholder="Search metrics...">
+							<div style="border:2px solid gray;text-align:center;">
+								<input type="text" id="searchBox" placeholder="Search metrics...">
+							</div>
 							<ul id="itemList">
 								<!-- Two-Level List will be added here -->
 							</ul>
@@ -100,8 +116,7 @@
 					</td>
 				</tr>
 			</table>
-			
-        </div>
+		</div>
 
         <div class="my-div" >
             <div class="grid" id="grid">
@@ -110,6 +125,14 @@
         </div>
     </div>
     <script>
+		function dosize() {
+            var w = document.documentElement.clientWidth, h = parseInt(document.documentElement.clientHeight) - 10;
+            var obj = document.getElementById("paneleft");
+            if (obj) {
+                obj.style.height = h+ "px";
+            }
+        }
+		window.onresize = dosize;
 	function getHostSeleted(){
 			var checkedList=[];	
 			var arr = document.getElementsByName("mHost");
@@ -398,7 +421,9 @@
                         category.nextSibling.style.display = text.toUpperCase().includes(filter) ? "" : "none";
                     }
                 });
-            });
+			});
+		   dosize();
+
         };
     </script>
 </body>
